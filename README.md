@@ -1,7 +1,5 @@
 # timing-object
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/chrisguttandin/timing-object.svg)](https://greenkeeper.io/)
-
 **An implementation of the timing object specification.**
 
 [![tests](https://img.shields.io/travis/chrisguttandin/timing-object/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/timing-object)
