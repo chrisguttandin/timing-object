@@ -10,6 +10,26 @@ import {
 } from './interfaces';
 import { TConnectionState } from './types';
 
+const filterVector = (vector?: ITimingStateVectorUpdate) => {
+    if (vector === undefined) {
+        return { };
+    }
+
+    let filteredVector = (vector.acceleration !== null && vector.acceleration !== undefined) ?
+        { acceleration: vector.acceleration } :
+        { };
+
+    if (vector.position !== null && vector.position !== undefined) {
+        filteredVector = { ...filteredVector, position: vector.position };
+    }
+
+    if (vector.velocity !== null && vector.velocity !== undefined) {
+        return { ...filteredVector, velocity: vector.velocity };
+    }
+
+    return filteredVector;
+};
+
 export const timingObjectConstructorFactory = (
     illegalValueErrorFactory: IErrorFactory,
     invalidStateErrorFactory: IErrorFactory,
@@ -57,7 +77,7 @@ export const timingObjectConstructorFactory = (
             this._timingProviderSource = timingProviderSource;
             this._timeoutId = null;
             this._vector = (timingProviderSource === null) ?
-                { acceleration: 0, position: 0, velocity: 0, ...this._filterVector(vector), timestamp: performance.now() } :
+                { acceleration: 0, position: 0, velocity: 0, ...filterVector(vector), timestamp: performance.now() } :
                 timingProviderSource.vector;
 
             // @todo The spec doesn't require to check if the endPosition is actually greater than the startPosition.
@@ -70,10 +90,12 @@ export const timingObjectConstructorFactory = (
                 this._vector = { ...this._vector, acceleration: 0, position: startPosition, velocity: 0 };
             }
 
-            // @todo Check if the vector would leave the range immediately.
-            // @todo The specification requires to run this._setInternalTimeout() only if the vector had to be modified above but it
-            // probably should run in either case.
-            // http://webtiming.github.io/timingobject/#x5-1-create-a-new-timing-object
+            /*
+             * @todo Check if the vector would leave the range immediately.
+             * @todo The specification requires to run this._setInternalTimeout() only if the vector had to be modified above but it
+             * probably should run in either case.
+             * http://webtiming.github.io/timingobject/#x5-1-create-a-new-timing-object
+             */
             this._setInternalTimeout();
 
             if (timingProviderSource === null) {
@@ -82,9 +104,11 @@ export const timingObjectConstructorFactory = (
                 const onAdjust = () => {
                     this._skew = timingProviderSource.skew;
 
-                    // @todo Process skew change with newSkew as parameter.
-                    // http://webtiming.github.io/timingobject/#x5-7-process-skew-change
-                    // http://webtiming.github.io/timingobject/#x5-10-calculate-skew-adjustment
+                    /*
+                     * @todo Process skew change with newSkew as parameter.
+                     * http://webtiming.github.io/timingobject/#x5-7-process-skew-change
+                     * http://webtiming.github.io/timingobject/#x5-10-calculate-skew-adjustment
+                     */
                 };
                 const onChange = () => this._setInternalVector(timingProviderSource.vector);
                 const onReadyStateChange = () => {
@@ -109,13 +133,6 @@ export const timingObjectConstructorFactory = (
                 timingProviderSource.addEventListener('change', onChange);
                 timingProviderSource.addEventListener('readystatechange', onReadyStateChange);
             }
-        }
-
-        private _isAllowedTransition (readyState: TConnectionState) {
-            return ((this._readyState === 'closing' && readyState === 'closed') ||
-                this._readyState === 'connecting' ||
-                (this._readyState === 'open' && readyState === 'closed') ||
-                (this._readyState === 'open' && readyState === 'closing'));
         }
 
         get endPosition () {
@@ -231,7 +248,7 @@ export const timingObjectConstructorFactory = (
                 return Promise.reject(new TypeError('The timingProviderSource failed to return a promise.'));
             }
 
-            const filteredVector = this._filterVector(newVector);
+            const filteredVector = filterVector(newVector);
 
             // Return immediately if there is nothing to update.
             if (Object.keys(filteredVector).length === 0) {
@@ -252,24 +269,11 @@ export const timingObjectConstructorFactory = (
             return Promise.resolve();
         }
 
-        private _filterVector (vector?: ITimingStateVectorUpdate) {
-            if (vector === undefined) {
-                return { };
-            }
-
-            let filteredVector = (vector.acceleration !== null && vector.acceleration !== undefined) ?
-                { acceleration: vector.acceleration } :
-                { };
-
-            if (vector.position !== null && vector.position !== undefined) {
-                filteredVector = { ...filteredVector, position: vector.position };
-            }
-
-            if (vector.velocity !== null && vector.velocity !== undefined) {
-                return { ...filteredVector, velocity: vector.velocity };
-            }
-
-            return filteredVector;
+        private _isAllowedTransition (readyState: TConnectionState) {
+            return ((this._readyState === 'closing' && readyState === 'closed') ||
+                this._readyState === 'connecting' ||
+                (this._readyState === 'open' && readyState === 'closed') ||
+                (this._readyState === 'open' && readyState === 'closing'));
         }
 
         private _setInternalTimeout () {
@@ -289,7 +293,7 @@ export const timingObjectConstructorFactory = (
                 return;
             }
 
-	 		this._timeoutId = setTimeout(() => this.query(), delay);
+            this._timeoutId = setTimeout(() => this.query(), delay);
         }
 
         private _setInternalVector (vector: ITimingStateVector) {
@@ -300,6 +304,6 @@ export const timingObjectConstructorFactory = (
             setTimeout(() => this.dispatchEvent(new Event('change')));
         }
 
-    }
+    };
 
 };
