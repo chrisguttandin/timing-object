@@ -1,5 +1,8 @@
-// @todo This implementation is oversimplified and by far not complete.
-// https://www.w3.org/TR/dom/#interface-eventtarget
+/*
+ * @todo This implementation is oversimplified and by far not complete.
+ * https://www.w3.org/TR/dom/#interface-eventtarget
+ */
+
 export class EventTarget {
 
     private _listeners: Map<string, Set<EventListener>>;
