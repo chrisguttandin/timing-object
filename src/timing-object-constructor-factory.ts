@@ -2,6 +2,7 @@ import { EventTarget } from './event-target';
 import { calculateTimeoutDelay } from './helpers/calculate-timeout-delay';
 import {
     IErrorFactory,
+    IFilteredTimingStateVectorUpdate,
     ITimingObject,
     ITimingObjectConstructor,
     ITimingProvider,
@@ -10,12 +11,12 @@ import {
 } from './interfaces';
 import { TConnectionState } from './types';
 
-const filterVector = (vector?: ITimingStateVectorUpdate) => {
+const filterVector = (vector?: ITimingStateVectorUpdate): IFilteredTimingStateVectorUpdate => {
     if (vector === undefined) {
         return { };
     }
 
-    let filteredVector = (vector.acceleration !== null && vector.acceleration !== undefined) ?
+    let filteredVector: IFilteredTimingStateVectorUpdate = (vector.acceleration !== null && vector.acceleration !== undefined) ?
         { acceleration: vector.acceleration } :
         { };
 
