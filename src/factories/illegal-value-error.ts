@@ -1,23 +1,19 @@
-import { IErrorFactory } from '../interfaces';
+import { TIllegalValueErrorFactory } from '../types';
 
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare const DOMException: {
     new (message: string, name: string): DOMException;
 };
 
-export class IllegalValueErrorFactory implements IErrorFactory {
+export const createIllegalValueError: TIllegalValueErrorFactory = () => {
+    try {
+        return new DOMException('', 'IllegalValueError');
+    } catch (err) {
+        const exception: any = new Error();
 
-    public create () {
-        try {
-            return new DOMException('', 'IllegalValueError');
-        } catch (err) {
-            const exception: any = new Error();
+        // @todo exception.code;
+        exception.name = 'IllegalValueError';
 
-            // @todo exception.code;
-            exception.name = 'IllegalValueError';
-
-            return exception;
-        }
+        return exception;
     }
-
-}
+};

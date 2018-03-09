@@ -1,15 +1,13 @@
-import { EventTarget } from './event-target';
-import { calculateTimeoutDelay } from './helpers/calculate-timeout-delay';
+import { EventTarget } from '../event-target';
+import { calculateTimeoutDelay } from '../helpers/calculate-timeout-delay';
 import {
-    IErrorFactory,
     IFilteredTimingStateVectorUpdate,
     ITimingObject,
-    ITimingObjectConstructor,
     ITimingProvider,
     ITimingStateVector,
     ITimingStateVectorUpdate
-} from './interfaces';
-import { TConnectionState } from './types';
+} from '../interfaces';
+import { TConnectionState, TTimingObjectConstructorFactory } from '../types';
 
 const filterVector = (vector?: ITimingStateVectorUpdate): IFilteredTimingStateVectorUpdate => {
     if (vector === undefined) {
@@ -31,12 +29,12 @@ const filterVector = (vector?: ITimingStateVectorUpdate): IFilteredTimingStateVe
     return filteredVector;
 };
 
-export const timingObjectConstructorFactory = (
-    illegalValueErrorFactory: IErrorFactory,
-    invalidStateErrorFactory: IErrorFactory,
-    performance: Window['performance'],
-    setTimeout: Window['setTimeout']
-): ITimingObjectConstructor => {
+export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
+    createIllegalValueError,
+    createInvalidStateError,
+    performance,
+    setTimeout
+) => {
 
     return class extends EventTarget implements ITimingObject {
 
@@ -202,7 +200,7 @@ export const timingObjectConstructorFactory = (
 
         public query (): ITimingStateVector {
             if (this._readyState !== 'open') {
-                throw invalidStateErrorFactory.create();
+                throw createInvalidStateError();
             }
 
             const currentTimestamp = performance.now();
@@ -236,7 +234,7 @@ export const timingObjectConstructorFactory = (
 
         public update (newVector: ITimingStateVectorUpdate): Promise<void> {
             if (this._readyState !== 'open') {
-                return Promise.reject(invalidStateErrorFactory.create());
+                return Promise.reject(createInvalidStateError());
             }
 
             if (this._timingProviderSource !== null) {
@@ -262,7 +260,7 @@ export const timingObjectConstructorFactory = (
             if ((position < this._startPosition || position > this._endPosition) ||
                     (position === this._startPosition && (velocity < 0 || (velocity === 0 && acceleration < 0))) ||
                     (position === this._endPosition && (velocity > 0 || (velocity === 0 && acceleration > 0)))) {
-                return Promise.reject(illegalValueErrorFactory.create());
+                return Promise.reject(createIllegalValueError());
             }
 
             this._setInternalVector(normalizedNewVector);

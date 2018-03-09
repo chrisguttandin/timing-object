@@ -1,4 +1,3 @@
-export * from './error-factory';
 export * from './filtered-timing-state-vector-update';
 export * from './timing-object';
 export * from './timing-object-constructor';

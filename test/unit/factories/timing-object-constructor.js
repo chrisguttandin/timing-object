@@ -1,25 +1,25 @@
-import { TimingProvider } from '../mocks/timing-provider';
+import { TimingProvider } from '../../mocks/timing-provider';
+import { createTimingObjectConstructor } from '../../../src/factories/timing-object-constructor';
 import { stub } from 'sinon';
-import { timingObjectConstructorFactory } from '../../src/timing-object-constructor-factory';
 
 describe('TimingObject', () => {
 
     let TimingObject;
-    let fakeIllegalValueErrorFactory;
-    let fakeInvalidStateErrorFactory;
+    let createIllegalValueError;
+    let createInvalidStateError;
     let fakePerformance;
     let fakeSetTimeout;
 
     beforeEach(() => {
-        fakeIllegalValueErrorFactory = { create: stub() };
-        fakeInvalidStateErrorFactory = { create: stub() };
+        createIllegalValueError = stub();
+        createInvalidStateError = stub();
         fakePerformance = { now: stub() };
         fakeSetTimeout = stub();
 
         fakePerformance.now.returns(16);
         fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
 
-        TimingObject = timingObjectConstructorFactory(fakeIllegalValueErrorFactory, fakeInvalidStateErrorFactory, fakePerformance, fakeSetTimeout);
+        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, fakePerformance, fakeSetTimeout);
     });
 
     describe('constructor()', () => {
@@ -320,14 +320,14 @@ describe('TimingObject', () => {
 
                 // @todo This is an ugly fix to modify the readyonly property.
                 timingObject._readyState = 'anything but open';
-                fakeInvalidStateErrorFactory.create.returns(error);
+                createInvalidStateError.returns(error);
 
                 try {
                     timingObject.query();
                 } catch (err) {
                     expect(err).to.equal(error);
 
-                    expect(fakeInvalidStateErrorFactory.create).to.have.been.calledOnce;
+                    expect(createInvalidStateError).to.have.been.calledOnce;
 
                     done();
                 }
@@ -504,14 +504,14 @@ describe('TimingObject', () => {
                     const timingProvider = new TimingProvider({ readyState: 'anything but open' });
                     const timingObject = new TimingObject(timingProvider);
 
-                    fakeInvalidStateErrorFactory.create.returns(error);
+                    createInvalidStateError.returns(error);
 
                     timingObject
                         .update(vector)
                         .catch((err) => {
                             expect(err).to.equal(error);
 
-                            expect(fakeInvalidStateErrorFactory.create).to.have.been.calledOnce;
+                            expect(createInvalidStateError).to.have.been.calledOnce;
 
                             done();
                         });
@@ -574,14 +574,14 @@ describe('TimingObject', () => {
 
                     // @todo This is an ugly fix to modify the readyonly property.
                     timingObject._readyState = 'anything but open';
-                    fakeInvalidStateErrorFactory.create.returns(error);
+                    createInvalidStateError.returns(error);
 
                     timingObject
                         .update({ velocity: 0 })
                         .catch((err) => {
                             expect(err).to.equal(error);
 
-                            expect(fakeInvalidStateErrorFactory.create).to.have.been.calledOnce;
+                            expect(createInvalidStateError).to.have.been.calledOnce;
 
                             done();
                         });
@@ -801,14 +801,14 @@ describe('TimingObject', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 0, velocity: 1 }, 0, 1);
 
-                    fakeIllegalValueErrorFactory.create.returns(error);
+                    createIllegalValueError.returns(error);
 
                     timingObject
                         .update({ position: 2 })
                         .catch((err) => {
                             expect(err).to.equal(error);
 
-                            expect(fakeIllegalValueErrorFactory.create).to.have.been.calledOnce;
+                            expect(createIllegalValueError).to.have.been.calledOnce;
 
                             done();
                         });
@@ -822,14 +822,14 @@ describe('TimingObject', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 3, velocity: 1 }, 3, 4);
 
-                    fakeIllegalValueErrorFactory.create.returns(error);
+                    createIllegalValueError.returns(error);
 
                     timingObject
                         .update({ position: 2 })
                         .catch((err) => {
                             expect(err).to.equal(error);
 
-                            expect(fakeIllegalValueErrorFactory.create).to.have.been.calledOnce;
+                            expect(createIllegalValueError).to.have.been.calledOnce;
 
                             done();
                         });

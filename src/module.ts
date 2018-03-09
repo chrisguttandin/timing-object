@@ -1,15 +1,13 @@
-import { IllegalValueErrorFactory } from './factories/illegal-value-error';
-import { InvalidStateErrorFactory } from './factories/invalid-state-error';
+import { createIllegalValueError } from './factories/illegal-value-error';
+import { createInvalidStateError } from './factories/invalid-state-error';
+import { createTimingObjectConstructor } from './factories/timing-object-constructor';
 import { ITimingObjectConstructor } from './interfaces';
-import { timingObjectConstructorFactory } from './timing-object-constructor-factory';
 
 export * from './interfaces';
 export * from './types';
 
-const illegalValueErrorFactory = new IllegalValueErrorFactory();
-const invalidStateErrorFactory = new InvalidStateErrorFactory();
-const timingObjectConstructor: ITimingObjectConstructor = timingObjectConstructorFactory(
-    illegalValueErrorFactory, invalidStateErrorFactory, performance, setTimeout
+const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectConstructor(
+    createIllegalValueError, createInvalidStateError, performance, setTimeout
 );
 
 export { timingObjectConstructor as TimingObject };

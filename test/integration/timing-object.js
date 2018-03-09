@@ -1,7 +1,7 @@
-import { IllegalValueErrorFactory } from '../../src/factories/illegal-value-error';
-import { InvalidStateErrorFactory } from '../../src/factories/invalid-state-error';
+import { createIllegalValueError } from '../../src/factories/illegal-value-error';
+import { createInvalidStateError } from '../../src/factories/invalid-state-error';
+import { createTimingObjectConstructor } from '../../src/factories/timing-object-constructor';
 import { stub } from 'sinon';
-import { timingObjectConstructorFactory } from '../../src/timing-object-constructor-factory';
 
 describe('TimingObject', () => {
 
@@ -10,15 +10,12 @@ describe('TimingObject', () => {
     let fakeSetTimeout;
 
     beforeEach(() => {
-        const illegalValueErrorFactory = new IllegalValueErrorFactory();
-        const invalidStateErrorFactory = new InvalidStateErrorFactory();
-
         fakePerformance = { now: stub() };
         fakeSetTimeout = stub();
 
         fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
 
-        TimingObject = timingObjectConstructorFactory(illegalValueErrorFactory, invalidStateErrorFactory, fakePerformance, fakeSetTimeout);
+        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, fakePerformance, fakeSetTimeout);
     });
 
     it('should compute equal values', () => {
