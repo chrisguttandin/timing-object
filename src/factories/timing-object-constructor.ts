@@ -69,6 +69,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
             this._endPosition = (timingProviderSource === null) ? endPosition : timingProviderSource.endPosition;
             this._onchange = null;
+            this._onerror = null;
             this._onreadystatechange = null;
             this._readyState = (timingProviderSource === null) ? 'open' : timingProviderSource.readyState;
             this._skew = (timingProviderSource === null) ? 0 : timingProviderSource.skew;
