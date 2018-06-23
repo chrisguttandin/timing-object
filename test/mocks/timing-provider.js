@@ -21,7 +21,7 @@ export class TimingProvider extends EventTarget {
         this.skew = skew;
         this.startPosition = startPosition;
         this.update = stub();
-        this.vector = Object.assign({ }, DEFAULT_VECTOR, vector);
+        this.vector = { ...DEFAULT_VECTOR, ...vector };
     }
 
 }
