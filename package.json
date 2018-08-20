@@ -63,10 +63,10 @@
   ],
   "homepage": "https://github.com/chrisguttandin/timing-object",
   "keywords": [
-    "Timing Object",
-    "Timing Provider",
     "synchronisation",
     "timing",
+    "Timing Object",
+    "Timing Provider",
     "timingsrc",
     "webtiming"
   ],
