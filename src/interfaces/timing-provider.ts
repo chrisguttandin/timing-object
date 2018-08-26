@@ -7,6 +7,9 @@ export interface ITimingProvider extends EventTarget {
 
     readonly endPosition: number;
 
+    // @todo error is not part of the specification.
+    readonly error: null | Error;
+
     // @todo onadjust is not part of the specification.
     onadjust: null | EventListener;
 
@@ -18,9 +21,6 @@ export interface ITimingProvider extends EventTarget {
 
     // @todo onreadystatechange is not part of the specification.
     onreadystatechange: null | EventListener;
-
-    // @todo error is not part of the specification.
-    readonly error: null | Error;
 
     readonly readyState: TConnectionState;
 

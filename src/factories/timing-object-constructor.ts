@@ -52,9 +52,9 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
         private _startPosition: number;
 
-        private _timingProviderSource: null | ITimingProvider;
-
         private _timeoutId: null | number;
+
+        private _timingProviderSource: null | ITimingProvider;
 
         private _vector: ITimingStateVector;
 
