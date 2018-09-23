@@ -1,7 +1,6 @@
-import { TConnectionState } from '../types';
+import { TConnectionState, TTimingStateVectorUpdate } from '../types';
 import { ITimingProvider } from './timing-provider';
 import { ITimingStateVector } from './timing-state-vector';
-import { ITimingStateVectorUpdate } from './timing-state-vector-update';
 
 export interface ITimingObject extends EventTarget {
 
@@ -23,6 +22,6 @@ export interface ITimingObject extends EventTarget {
 
     query (): ITimingStateVector;
 
-    update (newVector: ITimingStateVectorUpdate): Promise<void>;
+    update (newVector: TTimingStateVectorUpdate): Promise<void>;
 
 }

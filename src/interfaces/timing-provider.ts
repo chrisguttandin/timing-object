@@ -1,6 +1,5 @@
-import { TConnectionState } from '../types';
+import { TConnectionState, TTimingStateVectorUpdate } from '../types';
 import { ITimingStateVector } from './timing-state-vector';
-import { ITimingStateVectorUpdate } from './timing-state-vector-update';
 
 // @todo It is not specified that the TimingProvider should implement the EventTarget interface.
 export interface ITimingProvider extends EventTarget {
@@ -30,6 +29,6 @@ export interface ITimingProvider extends EventTarget {
 
     readonly vector: ITimingStateVector;
 
-    update (newVector: ITimingStateVectorUpdate): Promise<void>;
+    update (newVector: TTimingStateVectorUpdate): Promise<void>;
 
 }

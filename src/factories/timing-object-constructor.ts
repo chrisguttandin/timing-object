@@ -1,20 +1,14 @@
 import { EventTarget } from '../event-target';
 import { calculateTimeoutDelay } from '../helpers/calculate-timeout-delay';
-import {
-    IFilteredTimingStateVectorUpdate,
-    ITimingObject,
-    ITimingProvider,
-    ITimingStateVector,
-    ITimingStateVectorUpdate
-} from '../interfaces';
-import { TConnectionState, TTimingObjectConstructorFactory } from '../types';
+import { ITimingObject, ITimingProvider, ITimingStateVector } from '../interfaces';
+import { TConnectionState, TFilteredTimingStateVectorUpdate, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
 
-const filterVector = (vector?: ITimingStateVectorUpdate): IFilteredTimingStateVectorUpdate => {
+const filterVector = (vector?: TTimingStateVectorUpdate): TFilteredTimingStateVectorUpdate => {
     if (vector === undefined) {
         return { };
     }
 
-    let filteredVector: IFilteredTimingStateVectorUpdate = (vector.acceleration !== null && vector.acceleration !== undefined) ?
+    let filteredVector: TFilteredTimingStateVectorUpdate = (vector.acceleration !== null && vector.acceleration !== undefined) ?
         { acceleration: vector.acceleration } :
         { };
 
@@ -59,7 +53,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
         private _vector: ITimingStateVector;
 
         constructor (timingProviderSource?: ITimingProvider);
-        constructor (vector?: ITimingStateVectorUpdate, startPosition?: number, endPosition?: number);
+        constructor (vector?: TTimingStateVectorUpdate, startPosition?: number, endPosition?: number);
         constructor (timingProviderSourceOrVector = { }, startPosition = Number.NEGATIVE_INFINITY, endPosition = Number.POSITIVE_INFINITY) {
             super();
 
@@ -233,7 +227,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             return result;
         }
 
-        public update (newVector: ITimingStateVectorUpdate): Promise<void> {
+        public update (newVector: TTimingStateVectorUpdate): Promise<void> {
             if (this._readyState !== 'open') {
                 return Promise.reject(createInvalidStateError());
             }
