@@ -9,11 +9,9 @@ export const createIllegalValueError: TIllegalValueErrorFactory = () => {
     try {
         return new DOMException('', 'IllegalValueError');
     } catch (err) {
-        const exception: any = new Error();
+        // @todo err.code;
+        err.name = 'IllegalValueError';
 
-        // @todo exception.code;
-        exception.name = 'IllegalValueError';
-
-        return exception;
+        return err;
     }
 };
