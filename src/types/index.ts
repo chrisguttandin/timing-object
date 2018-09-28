@@ -1,4 +1,5 @@
 export * from './connection-state';
+export * from './event-target-constructor-factory';
 export * from './filtered-timing-state-vector-update';
 export * from './illegal-value-error-factory';
 export * from './invalid-state-error-factory';

@@ -1,4 +1,3 @@
-import { EventTarget } from '../event-target';
 import { calculateTimeoutDelay } from '../helpers/calculate-timeout-delay';
 import { ITimingObject, ITimingProvider, ITimingStateVector } from '../interfaces';
 import { TConnectionState, TFilteredTimingStateVectorUpdate, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
@@ -26,11 +25,12 @@ const filterVector = (vector?: TTimingStateVectorUpdate): TFilteredTimingStateVe
 export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
     createIllegalValueError,
     createInvalidStateError,
+    eventTargetConstructor,
     performance,
     setTimeout
 ) => {
 
-    return class extends EventTarget implements ITimingObject {
+    return class extends eventTargetConstructor implements ITimingObject {
 
         private _endPosition: number;
 

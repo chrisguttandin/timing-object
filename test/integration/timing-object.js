@@ -1,3 +1,4 @@
+import { createEventTargetConstructor } from '../../src/factories/event-target-constructor';
 import { createIllegalValueError } from '../../src/factories/illegal-value-error';
 import { createInvalidStateError } from '../../src/factories/invalid-state-error';
 import { createTimingObjectConstructor } from '../../src/factories/timing-object-constructor';
@@ -15,7 +16,7 @@ describe('TimingObject', () => {
 
         fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
 
-        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, fakePerformance, fakeSetTimeout);
+        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, createEventTargetConstructor(document), fakePerformance, fakeSetTimeout);
     });
 
     it('should compute equal values', () => {

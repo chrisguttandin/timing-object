@@ -1,9 +1,9 @@
-import { EventTarget } from '../../src/event-target';
+import { createEventTargetConstructor } from '../../src/factories/event-target-constructor';
 import { stub } from 'sinon';
 
 const DEFAULT_VECTOR = { acceleration: 0, position: 0, velocity: 0 };
 
-export class TimingProvider extends EventTarget {
+export class TimingProvider extends createEventTargetConstructor(document) {
 
     constructor (options = { }) {
         super();
