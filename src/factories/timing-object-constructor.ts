@@ -129,11 +129,11 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             }
         }
 
-        get endPosition () {
+        get endPosition (): number {
             return this._endPosition;
         }
 
-        get onchange () {
+        get onchange (): null | EventListener {
             return this._onchange;
         }
 
@@ -149,7 +149,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._onchange = value;
         }
 
-        get onerror () {
+        get onerror (): null | EventListener {
             return this._onerror;
         }
 
@@ -165,7 +165,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._onerror = value;
         }
 
-        get onreadystatechange () {
+        get onreadystatechange (): null | EventListener {
             return this._onreadystatechange;
         }
 
@@ -181,15 +181,15 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._onreadystatechange = value;
         }
 
-        get readyState () {
+        get readyState (): TConnectionState {
             return this._readyState;
         }
 
-        get startPosition () {
+        get startPosition (): number {
             return this._startPosition;
         }
 
-        get timingProviderSource () {
+        get timingProviderSource (): null | ITimingProvider {
             return this._timingProviderSource;
         }
 
@@ -263,14 +263,14 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             return Promise.resolve();
         }
 
-        private _isAllowedTransition (readyState: TConnectionState) {
+        private _isAllowedTransition (readyState: TConnectionState): boolean {
             return ((this._readyState === 'closing' && readyState === 'closed') ||
                 this._readyState === 'connecting' ||
                 (this._readyState === 'open' && readyState === 'closed') ||
                 (this._readyState === 'open' && readyState === 'closing'));
         }
 
-        private _setInternalTimeout () {
+        private _setInternalTimeout (): void {
             if (this._timeoutId !== null) {
                 clearTimeout(this._timeoutId);
                 this._timeoutId = null;
@@ -290,7 +290,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._timeoutId = setTimeout(() => this.query(), delay);
         }
 
-        private _setInternalVector (vector: ITimingStateVector) {
+        private _setInternalVector (vector: ITimingStateVector): void {
             this._vector = vector;
 
             this._setInternalTimeout();
