@@ -30,7 +30,8 @@ import { TimingObject } from 'timing-object';
 
 The `TimingObject` implements [the
 spec](http://webtiming.github.io/timingobject/#idl-def-timingobject) with one
-notable difference. It does not support the [`timeupdate`](http://webtiming.github.io/timingobject/#dom-timingobject-ontimeupdate)
+notable difference. It does not support the
+[`timeupdate`](http://webtiming.github.io/timingobject/#dom-timingobject-ontimeupdate)
 event.
 
 ## ITimingProvider interface
@@ -48,3 +49,7 @@ class MyCrazyTimingProvider implements ITimingProvider {
 
 }
 ```
+
+One example of such a TimingProvider is the
+[timing-provider package](https://github.com/chrisguttandin/timing-provider). It
+uses WebRTC as the underlying communication channel.
