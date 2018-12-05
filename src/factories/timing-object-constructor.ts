@@ -88,7 +88,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
              * @todo Check if the vector would leave the range immediately.
              * @todo The specification requires to run this._setInternalTimeout() only if the vector had to be modified above but it
              * probably should run in either case.
-             * http://webtiming.github.io/timingobject/#x5-1-create-a-new-timing-object
+             * https://webtiming.github.io/timingobject/#x5-1-create-a-new-timing-object
              */
             this._setInternalTimeout();
 
@@ -100,8 +100,8 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
                     /*
                      * @todo Process skew change with newSkew as parameter.
-                     * http://webtiming.github.io/timingobject/#x5-7-process-skew-change
-                     * http://webtiming.github.io/timingobject/#x5-10-calculate-skew-adjustment
+                     * https://webtiming.github.io/timingobject/#x5-7-process-skew-change
+                     * https://webtiming.github.io/timingobject/#x5-10-calculate-skew-adjustment
                      */
                 };
                 const onChange = () => this._setInternalVector(timingProviderSource.vector);
