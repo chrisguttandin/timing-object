@@ -1,3 +1,3 @@
-import { IEventTargetConstructor } from '../interfaces';
+import { TEventTargetConstructor } from '../types';
 
-export type TEventTargetConstructorFactory = (document: Window['document']) => IEventTargetConstructor;
+export type TEventTargetConstructorFactory = (document: Window['document']) => TEventTargetConstructor;

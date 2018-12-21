@@ -2,12 +2,13 @@ import { createEventTargetConstructor } from './factories/event-target-construct
 import { createIllegalValueError } from './factories/illegal-value-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createTimingObjectConstructor } from './factories/timing-object-constructor';
-import { IEventTargetConstructor, ITimingObjectConstructor } from './interfaces';
+import { ITimingObjectConstructor } from './interfaces';
+import { TEventTargetConstructor } from './types';
 
 export * from './interfaces';
 export * from './types';
 
-const eventTargetConstructor: IEventTargetConstructor = createEventTargetConstructor(document);
+const eventTargetConstructor: TEventTargetConstructor = createEventTargetConstructor(document);
 
 const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectConstructor(
     createIllegalValueError, createInvalidStateError, eventTargetConstructor, performance, setTimeout
