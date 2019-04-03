@@ -1,6 +1,6 @@
-import { TFilteredTimingStateVectorUpdate, TTimingStateVectorUpdate } from '../types';
+import { TFilterTimingStateVectorUpdateFunction, TFilteredTimingStateVectorUpdate } from '../types';
 
-export const filterTimingStateVectorUpdate = (vector?: TTimingStateVectorUpdate): TFilteredTimingStateVectorUpdate => {
+export const filterTimingStateVectorUpdate: TFilterTimingStateVectorUpdateFunction = (vector) => {
     if (vector === undefined) {
         return { };
     }
