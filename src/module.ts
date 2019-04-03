@@ -12,6 +12,8 @@ import { ITimingObjectConstructor } from './interfaces';
 export * from './interfaces';
 export * from './types';
 
+export { filterTimingStateVectorUpdate };
+
 const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectConstructor(
     createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
     createIllegalValueError,
