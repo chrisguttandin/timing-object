@@ -1,31 +1,12 @@
 import { calculateTimeoutDelay } from '../helpers/calculate-timeout-delay';
 import { ITimingObject, ITimingProvider, ITimingStateVector } from '../interfaces';
-import { TConnectionState, TFilteredTimingStateVectorUpdate, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
-
-const filterVector = (vector?: TTimingStateVectorUpdate): TFilteredTimingStateVectorUpdate => {
-    if (vector === undefined) {
-        return { };
-    }
-
-    let filteredVector: TFilteredTimingStateVectorUpdate = (vector.acceleration !== null && vector.acceleration !== undefined) ?
-        { acceleration: vector.acceleration } :
-        { };
-
-    if (vector.position !== null && vector.position !== undefined) {
-        filteredVector = { ...filteredVector, position: vector.position };
-    }
-
-    if (vector.velocity !== null && vector.velocity !== undefined) {
-        return { ...filteredVector, velocity: vector.velocity };
-    }
-
-    return filteredVector;
-};
+import { TConnectionState, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
 
 export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
     createIllegalValueError,
     createInvalidStateError,
     eventTargetConstructor,
+    filterTimingStateVectorUpdate,
     performance,
     setTimeout
 ) => {
@@ -71,7 +52,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._timingProviderSource = timingProviderSource;
             this._timeoutId = null;
             this._vector = (timingProviderSource === null) ?
-                { acceleration: 0, position: 0, velocity: 0, ...filterVector(vector), timestamp: performance.now() } :
+                { acceleration: 0, position: 0, velocity: 0, ...filterTimingStateVectorUpdate(vector), timestamp: performance.now() } :
                 timingProviderSource.vector;
 
             // @todo The spec doesn't require to check if the endPosition is actually greater than the startPosition.
@@ -242,7 +223,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
                 return Promise.reject(new TypeError('The timingProviderSource failed to return a promise.'));
             }
 
-            const filteredVector = filterVector(newVector);
+            const filteredVector = filterTimingStateVectorUpdate(newVector);
 
             // Return immediately if there is nothing to update.
             if (Object.keys(filteredVector).length === 0) {

@@ -1,6 +1,7 @@
 import { TimingProvider } from '../../mocks/timing-provider';
 import { createEventTargetConstructor } from '../../../src/factories/event-target-constructor';
 import { createTimingObjectConstructor } from '../../../src/factories/timing-object-constructor';
+import { filterTimingStateVectorUpdate } from '../../../src/functions/filter-timing-state-vector-update';
 import { stub } from 'sinon';
 
 describe('TimingObject', () => {
@@ -20,7 +21,7 @@ describe('TimingObject', () => {
         fakePerformance.now.returns(16);
         fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
 
-        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, createEventTargetConstructor(document), fakePerformance, fakeSetTimeout);
+        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, createEventTargetConstructor(document), filterTimingStateVectorUpdate, fakePerformance, fakeSetTimeout);
     });
 
     describe('constructor()', () => {
