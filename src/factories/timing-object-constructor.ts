@@ -1,8 +1,8 @@
-import { calculateTimeoutDelay } from '../helpers/calculate-timeout-delay';
 import { ITimingObject, ITimingProvider, ITimingStateVector } from '../interfaces';
 import { TConnectionState, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
 
 export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
+    calculateTimeoutDelay,
     createIllegalValueError,
     createInvalidStateError,
     eventTargetConstructor,

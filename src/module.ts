@@ -1,18 +1,25 @@
+import { createCalculateDelta } from './factories/calculate-delta';
+import { createCalculatePositiveRealSolution } from './factories/calculate-positive-real-solution';
+import { createCalculateTimeoutDelay } from './factories/calculate-timeout-delay';
 import { createEventTargetConstructor } from './factories/event-target-constructor';
 import { createIllegalValueError } from './factories/illegal-value-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createTimingObjectConstructor } from './factories/timing-object-constructor';
+import { calculateRealSolutions } from './functions/calculate-real-solutions';
 import { filterTimingStateVectorUpdate } from './functions/filter-timing-state-vector-update';
 import { ITimingObjectConstructor } from './interfaces';
-import { TEventTargetConstructor } from './types';
 
 export * from './interfaces';
 export * from './types';
 
-const eventTargetConstructor: TEventTargetConstructor = createEventTargetConstructor(document);
-
 const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectConstructor(
-    createIllegalValueError, createInvalidStateError, eventTargetConstructor, filterTimingStateVectorUpdate, performance, setTimeout
+    createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
+    createIllegalValueError,
+    createInvalidStateError,
+    createEventTargetConstructor(document),
+    filterTimingStateVectorUpdate,
+    performance,
+    setTimeout
 );
 
 export { timingObjectConstructor as TimingObject };

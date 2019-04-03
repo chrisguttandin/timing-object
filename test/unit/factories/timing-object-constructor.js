@@ -1,4 +1,8 @@
 import { TimingProvider } from '../../mocks/timing-provider';
+import { calculateRealSolutions } from '../../../src/functions/calculate-real-solutions';
+import { createCalculateDelta } from '../../../src/factories/calculate-delta';
+import { createCalculatePositiveRealSolution } from '../../../src/factories/calculate-positive-real-solution';
+import { createCalculateTimeoutDelay } from '../../../src/factories/calculate-timeout-delay';
 import { createEventTargetConstructor } from '../../../src/factories/event-target-constructor';
 import { createTimingObjectConstructor } from '../../../src/factories/timing-object-constructor';
 import { filterTimingStateVectorUpdate } from '../../../src/functions/filter-timing-state-vector-update';
@@ -21,7 +25,15 @@ describe('TimingObject', () => {
         fakePerformance.now.returns(16);
         fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
 
-        TimingObject = createTimingObjectConstructor(createIllegalValueError, createInvalidStateError, createEventTargetConstructor(document), filterTimingStateVectorUpdate, fakePerformance, fakeSetTimeout);
+        TimingObject = createTimingObjectConstructor(
+            createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
+            createIllegalValueError,
+            createInvalidStateError,
+            createEventTargetConstructor(document),
+            filterTimingStateVectorUpdate,
+            fakePerformance,
+            fakeSetTimeout
+        );
     });
 
     describe('constructor()', () => {

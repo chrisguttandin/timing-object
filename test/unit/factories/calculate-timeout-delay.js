@@ -1,6 +1,15 @@
-import { calculateTimeoutDelay } from '../../../src/helpers/calculate-timeout-delay';
+import { calculateRealSolutions } from '../../../src/functions/calculate-real-solutions';
+import { createCalculateDelta } from '../../../src/factories/calculate-delta';
+import { createCalculatePositiveRealSolution } from '../../../src/factories/calculate-positive-real-solution';
+import { createCalculateTimeoutDelay } from '../../../src/factories/calculate-timeout-delay';
 
 describe('calculateTimeoutDelay', () => {
+
+    let calculateTimeoutDelay;
+
+    beforeEach(() => {
+        calculateTimeoutDelay = createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions)));
+    });
 
     describe('without an acceleration', () => {
 
