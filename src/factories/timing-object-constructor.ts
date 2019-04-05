@@ -245,10 +245,9 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
         }
 
         private _isAllowedTransition (readyState: TConnectionState): boolean {
-            return ((this._readyState === 'closing' && readyState === 'closed') ||
-                this._readyState === 'connecting' ||
-                (this._readyState === 'open' && readyState === 'closed') ||
-                (this._readyState === 'open' && readyState === 'closing'));
+            return ((this._readyState === 'closing' && readyState === 'closed')
+                || this._readyState === 'connecting'
+                || (this._readyState === 'open' && (readyState === 'closed' || readyState === 'closing')));
         }
 
         private _setInternalTimeout (): void {
