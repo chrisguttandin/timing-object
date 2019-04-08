@@ -22,7 +22,7 @@ describe('TimingObject', () => {
         fakePerformance = { now: stub() };
         fakeSetTimeout = stub();
 
-        fakePerformance.now.returns(16);
+        fakePerformance.now.returns(16000);
         fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
 
         TimingObject = createTimingObjectConstructor(
@@ -354,7 +354,7 @@ describe('TimingObject', () => {
             it('should not move', () => {
                 const timingObject = new TimingObject({ position: 2 });
 
-                fakePerformance.now.returns(17);
+                fakePerformance.now.returns(17000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -363,7 +363,7 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
 
-                fakePerformance.now.returns(31);
+                fakePerformance.now.returns(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -380,7 +380,7 @@ describe('TimingObject', () => {
             it('should move constantly', () => {
                 const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                fakePerformance.now.returns(17);
+                fakePerformance.now.returns(17000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -389,7 +389,7 @@ describe('TimingObject', () => {
                     velocity: 1
                 });
 
-                fakePerformance.now.returns(31);
+                fakePerformance.now.returns(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -406,7 +406,7 @@ describe('TimingObject', () => {
             it('should move with an accelerated velocity', () => {
                 const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                fakePerformance.now.returns(17);
+                fakePerformance.now.returns(17000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 1.2,
@@ -415,7 +415,7 @@ describe('TimingObject', () => {
                     velocity: 2.2
                 });
 
-                fakePerformance.now.returns(31);
+                fakePerformance.now.returns(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 1.2,
@@ -434,7 +434,7 @@ describe('TimingObject', () => {
             beforeEach(() => {
                 timingObject = new TimingObject({ position: 2, velocity: 1.5 }, 1, 3);
 
-                fakePerformance.now.returns(17);
+                fakePerformance.now.returns(17000);
             });
 
             it('should stop at the endPosition', () => {
@@ -445,7 +445,7 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
 
-                fakePerformance.now.returns(31);
+                fakePerformance.now.returns(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -470,7 +470,7 @@ describe('TimingObject', () => {
             beforeEach(() => {
                 timingObject = new TimingObject({ position: 2, velocity: -1.5 }, 1);
 
-                fakePerformance.now.returns(17);
+                fakePerformance.now.returns(17000);
             });
 
             it('should stop at the startPosition', () => {
@@ -481,7 +481,7 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
 
-                fakePerformance.now.returns(31);
+                fakePerformance.now.returns(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -649,7 +649,7 @@ describe('TimingObject', () => {
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ acceleration: 2 })
@@ -666,7 +666,7 @@ describe('TimingObject', () => {
                 it('should update the position of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ position: 3 })
@@ -683,7 +683,7 @@ describe('TimingObject', () => {
                 it('should update the velocity of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ velocity: 1 })
@@ -704,7 +704,7 @@ describe('TimingObject', () => {
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ acceleration: 2 })
@@ -721,7 +721,7 @@ describe('TimingObject', () => {
                 it('should update the position of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ position: 5 })
@@ -738,7 +738,7 @@ describe('TimingObject', () => {
                 it('should update the velocity of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ velocity: 0.5 })
@@ -759,7 +759,7 @@ describe('TimingObject', () => {
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ acceleration: 2 })
@@ -776,7 +776,7 @@ describe('TimingObject', () => {
                 it('should update the position of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ position: 5 })
@@ -793,7 +793,7 @@ describe('TimingObject', () => {
                 it('should update the velocity of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17);
+                    fakePerformance.now.returns(17000);
 
                     return timingObject
                         .update({ velocity: 0.5 })

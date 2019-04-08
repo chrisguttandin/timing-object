@@ -51,9 +51,15 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._startPosition = (timingProviderSource === null) ? startPosition : timingProviderSource.startPosition;
             this._timingProviderSource = timingProviderSource;
             this._timeoutId = null;
-            this._vector = (timingProviderSource === null) ?
-                { acceleration: 0, position: 0, velocity: 0, ...filterTimingStateVectorUpdate(vector), timestamp: performance.now() } :
-                timingProviderSource.vector;
+            this._vector = (timingProviderSource === null)
+                ? {
+                    acceleration: 0,
+                    position: 0,
+                    velocity: 0,
+                    ...filterTimingStateVectorUpdate(vector),
+                    timestamp: performance.now() / 1000
+                }
+                : timingProviderSource.vector;
 
             // @todo The spec doesn't require to check if the endPosition is actually greater than the startPosition.
 
@@ -179,7 +185,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
                 throw createInvalidStateError();
             }
 
-            const currentTimestamp = performance.now();
+            const currentTimestamp = performance.now() / 1000;
             const { acceleration, position, timestamp, velocity } = this._vector;
 
             // @todo Compute the delta by gradually applying the skew.
