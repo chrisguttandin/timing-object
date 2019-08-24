@@ -214,7 +214,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             return result;
         }
 
-        public update (newVector: TTimingStateVectorUpdate): Promise<void> {
+        public update (newVector: TTimingStateVectorUpdate): Promise<void> { // tslint:disable-line:invalid-void
             if (this._readyState !== 'open') {
                 return Promise.reject(createInvalidStateError());
             }
