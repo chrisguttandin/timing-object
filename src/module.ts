@@ -9,8 +9,12 @@ import { calculateRealSolutions } from './functions/calculate-real-solutions';
 import { filterTimingStateVectorUpdate } from './functions/filter-timing-state-vector-update';
 import { ITimingObjectConstructor } from './interfaces';
 
-export * from './interfaces';
-export * from './types';
+/*
+ * @todo Explicitly referencing the barrel file seems to be necessary when enabling the
+ * isolatedModules compiler option.
+ */
+export * from './interfaces/index';
+export * from './types/index';
 
 export { filterTimingStateVectorUpdate };
 
