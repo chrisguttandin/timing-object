@@ -32,4 +32,6 @@ const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectCons
 
 export { timingObjectConstructor as TimingObject };
 
+export { translateTimingStateVector };
+
 // @todo Expose an isSupported flag which checks for performance.now() support.
