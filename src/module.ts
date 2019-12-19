@@ -7,6 +7,7 @@ import { createInvalidStateError } from './factories/invalid-state-error';
 import { createTimingObjectConstructor } from './factories/timing-object-constructor';
 import { calculateRealSolutions } from './functions/calculate-real-solutions';
 import { filterTimingStateVectorUpdate } from './functions/filter-timing-state-vector-update';
+import { translateTimingStateVector } from './functions/translate-timing-state-vector';
 import { ITimingObjectConstructor } from './interfaces';
 
 /*
@@ -25,7 +26,8 @@ const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectCons
     createEventTargetConstructor(document),
     filterTimingStateVectorUpdate,
     performance,
-    setTimeout
+    setTimeout,
+    translateTimingStateVector
 );
 
 export { timingObjectConstructor as TimingObject };

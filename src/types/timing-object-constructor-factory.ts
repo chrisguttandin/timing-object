@@ -4,6 +4,7 @@ import { TEventTargetConstructor } from './event-target-constructor';
 import { TFilterTimingStateVectorUpdateFunction } from './filter-timing-state-vector-update-function';
 import { TIllegalValueErrorFactory } from './illegal-value-error-factory';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
+import { TTranslateTimingStateVectorFunction } from './translate-timing-state-vector-function';
 
 export type TTimingObjectConstructorFactory = (
     calculateTimeoutDelay: TCalculateTimeoutDelayFunction,
@@ -12,5 +13,6 @@ export type TTimingObjectConstructorFactory = (
     eventTargetConstructor: TEventTargetConstructor,
     filterTimingStateVectorUpdate: TFilterTimingStateVectorUpdateFunction,
     performance: Window['performance'],
-    setTimeout: Window['setTimeout']
+    setTimeout: Window['setTimeout'],
+    translateTimingStateVector: TTranslateTimingStateVectorFunction
 ) => ITimingObjectConstructor;

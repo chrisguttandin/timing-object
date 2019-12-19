@@ -8,6 +8,7 @@ import { createInvalidStateError } from '../../src/factories/invalid-state-error
 import { createTimingObjectConstructor } from '../../src/factories/timing-object-constructor';
 import { filterTimingStateVectorUpdate } from '../../src/functions/filter-timing-state-vector-update';
 import { stub } from 'sinon';
+import { translateTimingStateVector } from '../../src/functions/translate-timing-state-vector';
 
 describe('TimingObject', () => {
 
@@ -28,7 +29,8 @@ describe('TimingObject', () => {
             createEventTargetConstructor(document),
             filterTimingStateVectorUpdate,
             fakePerformance,
-            fakeSetTimeout
+            fakeSetTimeout,
+            translateTimingStateVector
         );
     });
 

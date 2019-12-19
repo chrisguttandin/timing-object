@@ -8,7 +8,8 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
     eventTargetConstructor,
     filterTimingStateVectorUpdate,
     performance,
-    setTimeout
+    setTimeout,
+    translateTimingStateVector
 ) => {
 
     return class extends eventTargetConstructor implements ITimingObject {
@@ -185,33 +186,26 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
                 throw createInvalidStateError();
             }
 
-            const currentTimestamp = performance.now() / 1000;
-            const { acceleration, position, timestamp, velocity } = this._vector;
+            const timestamp = performance.now() / 1000;
 
             // @todo Compute the delta by gradually applying the skew.
             const delta = (this._timingProviderSource === null) ?
-                currentTimestamp - timestamp :
-                currentTimestamp + this._skew - timestamp;
+                timestamp - this._vector.timestamp :
+                timestamp + this._skew - this._vector.timestamp;
+            const vector = translateTimingStateVector(this._vector, delta);
 
-            const result = {
-                acceleration,
-                position: position + (velocity * delta) + (0.5 * acceleration * delta ** 2),
-                timestamp: currentTimestamp,
-                velocity: velocity + (acceleration * delta)
-            };
-
-            if (this._endPosition < result.position || this._startPosition > result.position) {
+            if (this._endPosition < vector.position || this._startPosition > vector.position) {
                 this._setInternalVector({
-                    ...result,
+                    ...vector,
                     acceleration: 0,
-                    position: (this._endPosition < result.position) ? this._endPosition : this._startPosition,
+                    position: (this._endPosition < vector.position) ? this._endPosition : this._startPosition,
                     velocity: 0
                 });
 
                 return this.query();
             }
 
-            return result;
+            return vector;
         }
 
         public update (newVector: TTimingStateVectorUpdate): Promise<void> { // tslint:disable-line:invalid-void
