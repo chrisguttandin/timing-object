@@ -15,7 +15,6 @@ module.exports = (config) => {
                 served: false,
                 watched: true
             },
-            '../../test/integration/**/*.js',
             '../../test/unit/**/*.js'
         ],
 
@@ -25,7 +24,6 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            '../../test/integration/**/*.js': 'webpack',
             '../../test/unit/**/*.js': 'webpack'
         },
 

@@ -4,15 +4,13 @@ module.exports = {
         'sh:build-es2018',
         'sh:build-es5'
     ],
-    continuous: [
-        'karma:continuous'
-    ],
     lint: [
         'sh:lint-config',
         'sh:lint-src',
         'sh:lint-test'
     ],
     test: [
-        'karma:test'
+        'sh:test-integration',
+        'sh:test-unit'
     ]
 };
