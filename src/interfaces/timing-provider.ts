@@ -29,6 +29,6 @@ export interface ITimingProvider extends EventTarget {
 
     readonly vector: ITimingStateVector;
 
-    update (newVector: TTimingStateVectorUpdate): Promise<void>; // tslint:disable-line:invalid-void
+    update (newVector: TTimingStateVectorUpdate): Promise<void>;
 
 }
