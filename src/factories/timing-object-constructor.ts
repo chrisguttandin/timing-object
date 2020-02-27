@@ -1,5 +1,5 @@
 import { ITimingObject, ITimingProvider, ITimingStateVector } from '../interfaces';
-import { TConnectionState, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
+import { TConnectionState, TErrorEventHandler, TEventHandler, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
 
 export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
     calculateTimeoutDelay,
@@ -16,11 +16,11 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
         private _endPosition: number;
 
-        private _onchange: null | EventListener;
+        private _onchange: null | [ TEventHandler<this>, TEventHandler<this> ];
 
-        private _onerror: null | EventListener;
+        private _onerror: null | [ TErrorEventHandler<this>, TErrorEventHandler<this> ];
 
-        private _onreadystatechange: null | EventListener;
+        private _onreadystatechange: null | [ TEventHandler<this>, TEventHandler<this> ];
 
         private _readyState: TConnectionState;
 
@@ -121,52 +121,64 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             return this._endPosition;
         }
 
-        get onchange (): null | EventListener {
-            return this._onchange;
+        get onchange (): null | TEventHandler<this> {
+            return this._onchange === null ? this._onchange : this._onchange[0];
         }
 
         set onchange (value) {
             if (this._onchange !== null) {
-                this.removeEventListener('change', this._onchange);
+                this.removeEventListener('change', this._onchange[1]);
             }
 
-            if (value !== null) {
-                this.addEventListener('change', value);
-            }
+            if (typeof value === 'function') {
+                const boundListener = value.bind(this);
 
-            this._onchange = value;
+                this.addEventListener('change', boundListener);
+
+                this._onchange = [ value, boundListener ];
+            } else {
+                this._onchange = null;
+            }
         }
 
-        get onerror (): null | EventListener {
-            return this._onerror;
+        get onerror (): null | TErrorEventHandler<this> {
+            return this._onerror === null ? this._onerror : this._onerror[0];
         }
 
         set onerror (value) {
             if (this._onerror !== null) {
-                this.removeEventListener('error', this._onerror);
+                (<ITimingObject> this).removeEventListener('error', this._onerror[1]);
             }
 
-            if (value !== null) {
-                this.addEventListener('error', value);
-            }
+            if (typeof value === 'function') {
+                const boundListener = value.bind(this);
 
-            this._onerror = value;
+                (<ITimingObject> this).addEventListener('error', boundListener);
+
+                this._onerror = [ value, boundListener ];
+            } else {
+                this._onerror = null;
+            }
         }
 
-        get onreadystatechange (): null | EventListener {
-            return this._onreadystatechange;
+        get onreadystatechange (): null | TEventHandler<this> {
+            return (this._onreadystatechange === null) ? this._onreadystatechange : this._onreadystatechange[0];
         }
 
         set onreadystatechange (value) {
             if (this._onreadystatechange !== null) {
-                this.removeEventListener('readystatechange', this._onreadystatechange);
+                this.removeEventListener('readystatechange', this._onreadystatechange[1]);
             }
 
-            if (value !== null) {
-                this.addEventListener('readystatechange', value);
-            }
+            if (typeof value === 'function') {
+                const boundListener = value.bind(this);
 
-            this._onreadystatechange = value;
+                this.addEventListener('readystatechange', boundListener);
+
+                this._onreadystatechange = [ value, boundListener ];
+            } else {
+                this._onreadystatechange = null;
+            }
         }
 
         get readyState (): TConnectionState {

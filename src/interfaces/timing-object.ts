@@ -1,16 +1,17 @@
-import { TConnectionState, TTimingStateVectorUpdate } from '../types';
+import { TConnectionState, TErrorEventHandler, TEventHandler, TNativeEventTarget, TTimingStateVectorUpdate } from '../types';
+import { ITimingObjectEventMap } from './timing-object-event-map';
 import { ITimingProvider } from './timing-provider';
 import { ITimingStateVector } from './timing-state-vector';
 
-export interface ITimingObject extends EventTarget {
+export interface ITimingObject extends TNativeEventTarget {
 
     readonly endPosition: number;
 
-    onchange: null | EventListener;
+    onchange: null | TEventHandler<this>;
 
-    onerror: null | EventListener;
+    onerror: null | TErrorEventHandler<this>;
 
-    onreadystatechange: null | EventListener;
+    onreadystatechange: null | TEventHandler<this>;
 
     // @todo ontimeupdate: null | EventListener;
 
@@ -20,7 +21,23 @@ export interface ITimingObject extends EventTarget {
 
     readonly timingProviderSource: null | ITimingProvider;
 
+    addEventListener<K extends keyof ITimingObjectEventMap> (
+        type: K,
+        listener: (this: this, event: ITimingObjectEventMap[K]) => void,
+        options?: boolean | AddEventListenerOptions
+    ): void;
+
+    addEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+
     query (): ITimingStateVector;
+
+    removeEventListener<K extends keyof ITimingObjectEventMap> (
+        type: K,
+        listener: (this: this, event: ITimingObjectEventMap[K]) => void,
+        options?: boolean | EventListenerOptions
+    ): void;
+
+    removeEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 
     update (newVector: TTimingStateVectorUpdate): Promise<void>;
 

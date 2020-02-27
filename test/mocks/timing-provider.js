@@ -1,9 +1,11 @@
 import { createEventTargetConstructor } from '../../src/factories/event-target-constructor';
+import { createEventTargetFactory } from '../../src/factories/event-target-factory';
 import { stub } from 'sinon';
+import { wrapEventListener } from '../../src/functions/wrap-event-listener';
 
 const DEFAULT_VECTOR = { acceleration: 0, position: 0, velocity: 0 };
 
-export class TimingProvider extends createEventTargetConstructor(document) {
+export class TimingProvider extends createEventTargetConstructor(createEventTargetFactory(window), wrapEventListener) {
 
     constructor (options = { }) {
         super();

@@ -1,8 +1,9 @@
-import { TConnectionState, TTimingStateVectorUpdate } from '../types';
+import { TConnectionState, TEventHandler, TNativeEventTarget, TTimingStateVectorUpdate } from '../types';
+import { ITimingProviderEventMap } from './timing-provider-event-map';
 import { ITimingStateVector } from './timing-state-vector';
 
 // @todo It is not specified that the TimingProvider should implement the EventTarget interface.
-export interface ITimingProvider extends EventTarget {
+export interface ITimingProvider extends TNativeEventTarget {
 
     readonly endPosition: number;
 
@@ -10,16 +11,16 @@ export interface ITimingProvider extends EventTarget {
     readonly error: null | Error;
 
     // @todo onadjust is not part of the specification.
-    onadjust: null | EventListener;
+    onadjust: null | TEventHandler<this>;
 
     // @todo onchange is not part of the specification.
-    onchange: null | EventListener;
+    onchange: null | TEventHandler<this>;
 
     // @todo onerror is not part of the specification.
     // @todo onerror: null | EventListener;
 
     // @todo onreadystatechange is not part of the specification.
-    onreadystatechange: null | EventListener;
+    onreadystatechange: null | TEventHandler<this>;
 
     readonly readyState: TConnectionState;
 
@@ -28,6 +29,22 @@ export interface ITimingProvider extends EventTarget {
     readonly startPosition: number;
 
     readonly vector: ITimingStateVector;
+
+    addEventListener<K extends keyof ITimingProviderEventMap> (
+        type: K,
+        listener: (this: this, event: ITimingProviderEventMap[K]) => void,
+        options?: boolean | AddEventListenerOptions
+    ): void;
+
+    addEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+
+    removeEventListener<K extends keyof ITimingProviderEventMap> (
+        type: K,
+        listener: (this: this, event: ITimingProviderEventMap[K]) => void,
+        options?: boolean | EventListenerOptions
+    ): void;
+
+    removeEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 
     update (newVector: TTimingStateVectorUpdate): Promise<void>;
 

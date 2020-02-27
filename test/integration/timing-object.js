@@ -3,12 +3,14 @@ import { createCalculateDelta } from '../../src/factories/calculate-delta';
 import { createCalculatePositiveRealSolution } from '../../src/factories/calculate-positive-real-solution';
 import { createCalculateTimeoutDelay } from '../../src/factories/calculate-timeout-delay';
 import { createEventTargetConstructor } from '../../src/factories/event-target-constructor';
+import { createEventTargetFactory } from '../../src/factories/event-target-factory';
 import { createIllegalValueError } from '../../src/factories/illegal-value-error';
 import { createInvalidStateError } from '../../src/factories/invalid-state-error';
 import { createTimingObjectConstructor } from '../../src/factories/timing-object-constructor';
 import { filterTimingStateVectorUpdate } from '../../src/functions/filter-timing-state-vector-update';
 import { stub } from 'sinon';
 import { translateTimingStateVector } from '../../src/functions/translate-timing-state-vector';
+import { wrapEventListener } from '../../src/functions/wrap-event-listener';
 
 describe('TimingObject', () => {
 
@@ -26,7 +28,7 @@ describe('TimingObject', () => {
             createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
             createIllegalValueError,
             createInvalidStateError,
-            createEventTargetConstructor(document),
+            createEventTargetConstructor(createEventTargetFactory(window), wrapEventListener),
             filterTimingStateVectorUpdate,
             fakePerformance,
             fakeSetTimeout,

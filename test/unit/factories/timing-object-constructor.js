@@ -1,13 +1,15 @@
+import { spy, stub } from 'sinon';
 import { TimingProvider } from '../../mocks/timing-provider';
 import { calculateRealSolutions } from '../../../src/functions/calculate-real-solutions';
 import { createCalculateDelta } from '../../../src/factories/calculate-delta';
 import { createCalculatePositiveRealSolution } from '../../../src/factories/calculate-positive-real-solution';
 import { createCalculateTimeoutDelay } from '../../../src/factories/calculate-timeout-delay';
 import { createEventTargetConstructor } from '../../../src/factories/event-target-constructor';
+import { createEventTargetFactory } from '../../../src/factories/event-target-factory';
 import { createTimingObjectConstructor } from '../../../src/factories/timing-object-constructor';
 import { filterTimingStateVectorUpdate } from '../../../src/functions/filter-timing-state-vector-update';
-import { stub } from 'sinon';
 import { translateTimingStateVector } from '../../../src/functions/translate-timing-state-vector';
+import { wrapEventListener } from '../../../src/functions/wrap-event-listener';
 
 describe('TimingObject', () => {
 
@@ -30,7 +32,7 @@ describe('TimingObject', () => {
             createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
             createIllegalValueError,
             createInvalidStateError,
-            createEventTargetConstructor(document),
+            createEventTargetConstructor(createEventTargetFactory(window), wrapEventListener),
             filterTimingStateVectorUpdate,
             fakePerformance,
             fakeSetTimeout,
@@ -92,18 +94,6 @@ describe('TimingObject', () => {
 
     describe('endPosition', () => {
 
-        describe('with a timingProviderSource', () => {
-
-            it("should equal the timingProviderSource's endPosition", () => {
-                const endPosition = 30;
-                const timingProvider = new TimingProvider({ endPosition });
-                const timingObject = new TimingObject(timingProvider);
-
-                expect(timingObject.endPosition).to.equal(endPosition);
-            });
-
-        });
-
         describe('without a timingProviderSource', () => {
 
             it('should default to infinity', () => {
@@ -121,17 +111,76 @@ describe('TimingObject', () => {
 
         });
 
+        describe('with a timingProviderSource', () => {
+
+            it("should equal the timingProviderSource's endPosition", () => {
+                const endPosition = 30;
+                const timingProvider = new TimingProvider({ endPosition });
+                const timingObject = new TimingObject(timingProvider);
+
+                expect(timingObject.endPosition).to.equal(endPosition);
+            });
+
+        });
+
     });
 
     describe('onchange', () => {
 
         describe('without a timingProviderSource', () => {
 
+            let timingObject;
+
+            beforeEach(() => {
+                timingObject = new TimingObject();
+            });
+
+            it('should be null', () => {
+                expect(timingObject.onchange).to.be.null;
+            });
+
+            it('should be assignable to a function', () => {
+                const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
+                const onchange = timingObject.onchange = fn; // eslint-disable-line no-multi-assign
+
+                expect(onchange).to.equal(fn);
+                expect(timingObject.onchange).to.equal(fn);
+            });
+
+            it('should be assignable to null', () => {
+                const onchange = timingObject.onchange = null; // eslint-disable-line no-multi-assign
+
+                expect(onchange).to.be.null;
+                expect(timingObject.onchange).to.be.null;
+            });
+
+            it('should not be assignable to something else', () => {
+                const string = 'no function or null value';
+
+                timingObject.onchange = () => {};
+
+                const onchange = timingObject.onchange = string; // eslint-disable-line no-multi-assign
+
+                expect(onchange).to.equal(string);
+                expect(timingObject.onchange).to.be.null;
+            });
+
+            it('should register an independent event listener', () => {
+                const onchange = spy();
+
+                timingObject.onchange = onchange;
+                timingObject.addEventListener('change', onchange);
+
+                timingObject.dispatchEvent(new Event('change'));
+
+                expect(onchange).to.have.been.calledTwice;
+            });
+
             // @todo
 
         });
 
-        describe('without a timingProviderSource', () => {
+        describe('with a timingProviderSource', () => {
 
             let timingObject;
             let timingProvider;
@@ -142,7 +191,16 @@ describe('TimingObject', () => {
             });
 
             it('should pass on a change event', (done) => {
-                timingObject.onchange = () => done();
+                timingObject.onchange = function (event) {
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(timingObject);
+                    expect(event.target).to.equal(timingObject);
+                    expect(event.type).to.equal('change');
+
+                    expect(this).to.equal(timingObject);
+
+                    done();
+                };
 
                 timingProvider.dispatchEvent(new Event('change'));
             });
@@ -165,19 +223,124 @@ describe('TimingObject', () => {
 
     });
 
+    describe('onerror', () => {
+
+        let timingObject;
+
+        beforeEach(() => {
+            timingObject = new TimingObject();
+        });
+
+        it('should be null', () => {
+            expect(timingObject.onerror).to.be.null;
+        });
+
+        it('should be assignable to a function', () => {
+            const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
+            const onerror = timingObject.onerror = fn; // eslint-disable-line no-multi-assign
+
+            expect(onerror).to.equal(fn);
+            expect(timingObject.onerror).to.equal(fn);
+        });
+
+        it('should be assignable to null', () => {
+            const onerror = timingObject.onerror = null; // eslint-disable-line no-multi-assign
+
+            expect(onerror).to.be.null;
+            expect(timingObject.onerror).to.be.null;
+        });
+
+        it('should not be assignable to something else', () => {
+            const string = 'no function or null value';
+
+            timingObject.onerror = () => {};
+
+            const onerror = timingObject.onerror = string; // eslint-disable-line no-multi-assign
+
+            expect(onerror).to.equal(string);
+            expect(timingObject.onerror).to.be.null;
+        });
+
+        it('should register an independent event listener', () => {
+            const onerror = spy();
+
+            timingObject.onerror = onerror;
+            timingObject.addEventListener('error', onerror);
+
+            timingObject.dispatchEvent(new Event('error'));
+
+            expect(onerror).to.have.been.calledTwice;
+        });
+
+    });
+
     describe('onreadystatechange', () => {
 
         describe('without a timingProviderSource', () => {
 
-            it('should immediately fire an readystatechange event', (done) => {
-                const timingObject = new TimingObject();
+            let timingObject;
 
-                timingObject.onreadystatechange = () => done();
+            beforeEach(() => {
+                timingObject = new TimingObject();
+            });
+
+            it('should be null', () => {
+                expect(timingObject.onreadystatechange).to.be.null;
+            });
+
+            it('should be assignable to a function', () => {
+                const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
+                const onreadystatechange = timingObject.onreadystatechange = fn; // eslint-disable-line no-multi-assign
+
+                expect(onreadystatechange).to.equal(fn);
+                expect(timingObject.onreadystatechange).to.equal(fn);
+            });
+
+            it('should be assignable to null', () => {
+                const onreadystatechange = timingObject.onreadystatechange = null; // eslint-disable-line no-multi-assign
+
+                expect(onreadystatechange).to.be.null;
+                expect(timingObject.onreadystatechange).to.be.null;
+            });
+
+            it('should not be assignable to something else', () => {
+                const string = 'no function or null value';
+
+                timingObject.onreadystatechange = () => {};
+
+                const onreadystatechange = timingObject.onreadystatechange = string; // eslint-disable-line no-multi-assign
+
+                expect(onreadystatechange).to.equal(string);
+                expect(timingObject.onreadystatechange).to.be.null;
+            });
+
+            it('should register an independent event listener', () => {
+                const onreadystatechange = spy();
+
+                timingObject.onreadystatechange = onreadystatechange;
+                timingObject.addEventListener('readystatechange', onreadystatechange);
+
+                timingObject.dispatchEvent(new Event('readystatechange'));
+
+                expect(onreadystatechange).to.have.been.calledTwice;
+            });
+
+            it('should immediately fire an readystatechange event', (done) => {
+                timingObject.onreadystatechange = function (event) {
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(timingObject);
+                    expect(event.target).to.equal(timingObject);
+                    expect(event.type).to.equal('readystatechange');
+
+                    expect(this).to.equal(timingObject);
+
+                    done();
+                };
             });
 
         });
 
-        describe('without a timingProviderSource', () => {
+        describe('with a timingProviderSource', () => {
 
             let timingObject;
             let timingProvider;
@@ -190,7 +353,16 @@ describe('TimingObject', () => {
             describe('with a valid transition', () => {
 
                 it('should pass on an readystatechange event', (done) => {
-                    timingObject.onreadystatechange = () => done();
+                    timingObject.onreadystatechange = function (event) {
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(timingObject);
+                        expect(event.target).to.equal(timingObject);
+                        expect(event.type).to.equal('readystatechange');
+
+                        expect(this).to.equal(timingObject);
+
+                        done();
+                    };
 
                     timingProvider.readyState = 'closing';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
@@ -212,7 +384,16 @@ describe('TimingObject', () => {
             describe('with an invalid transition', () => {
 
                 it('should pass on an readystatechange event', (done) => {
-                    timingObject.onreadystatechange = () => done();
+                    timingObject.onreadystatechange = function (event) {
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(timingObject);
+                        expect(event.target).to.equal(timingObject);
+                        expect(event.type).to.equal('readystatechange');
+
+                        expect(this).to.equal(timingObject);
+
+                        done();
+                    };
 
                     timingProvider.readyState = 'connecting';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
@@ -230,7 +411,16 @@ describe('TimingObject', () => {
                 });
 
                 it('should emit an error event', (done) => {
-                    timingObject.onerror = () => done();
+                    timingObject.onerror = function (event) {
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(timingObject);
+                        expect(event.target).to.equal(timingObject);
+                        expect(event.type).to.equal('error');
+
+                        expect(this).to.equal(timingObject);
+
+                        done();
+                    };
 
                     timingProvider.readyState = 'connecting';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
@@ -244,6 +434,16 @@ describe('TimingObject', () => {
 
     describe('readyState', () => {
 
+        describe('without a timingProviderSource', () => {
+
+            it('should be open', () => {
+                const timingObject = new TimingObject();
+
+                expect(timingObject.readyState).to.equal('open');
+            });
+
+        });
+
         describe('with a timingProviderSource', () => {
 
             it("should equal the timingProviderSource's readyState", () => {
@@ -256,31 +456,9 @@ describe('TimingObject', () => {
 
         });
 
-        describe('without a timingProviderSource', () => {
-
-            it('should be open', () => {
-                const timingObject = new TimingObject();
-
-                expect(timingObject.readyState).to.equal('open');
-            });
-
-        });
-
     });
 
     describe('startPosition', () => {
-
-        describe('with a timingProviderSource', () => {
-
-            it("should equal the timingProviderSource's startPosition", () => {
-                const startPosition = 30;
-                const timingProvider = new TimingProvider({ startPosition });
-                const timingObject = new TimingObject(timingProvider);
-
-                expect(timingObject.startPosition).to.equal(startPosition);
-            });
-
-        });
 
         describe('without a timingProviderSource', () => {
 
@@ -299,9 +477,31 @@ describe('TimingObject', () => {
 
         });
 
+        describe('with a timingProviderSource', () => {
+
+            it("should equal the timingProviderSource's startPosition", () => {
+                const startPosition = 30;
+                const timingProvider = new TimingProvider({ startPosition });
+                const timingObject = new TimingObject(timingProvider);
+
+                expect(timingObject.startPosition).to.equal(startPosition);
+            });
+
+        });
+
     });
 
     describe('timingProviderSource', () => {
+
+        describe('without a timingProviderSource', () => {
+
+            it('should default to null', () => {
+                const timingObject = new TimingObject();
+
+                expect(timingObject.timingProviderSource).to.be.null;
+            });
+
+        });
 
         describe('with a timingProviderSource', () => {
 
@@ -314,15 +514,13 @@ describe('TimingObject', () => {
 
         });
 
-        describe('without a timingProviderSource', () => {
+    });
 
-            it('should default to null', () => {
-                const timingObject = new TimingObject();
+    describe('addEventListener()', () => {
 
-                expect(timingObject.timingProviderSource).to.be.null;
-            });
+    });
 
-        });
+    describe('dispatchEvent()', () => {
 
     });
 
@@ -503,82 +701,11 @@ describe('TimingObject', () => {
 
     });
 
+    describe('removeEventListener()', () => {
+
+    });
+
     describe('update()', () => {
-
-        describe('with a timingProviderSource', () => {
-
-            let vector;
-
-            beforeEach(() => {
-                vector = { velocity: 0 };
-            });
-
-            describe('with a readyState other than open', () => {
-
-                it('should reject the promise with an InvalidStateError', (done) => {
-                    const error = new Error('a fake error');
-                    const timingProvider = new TimingProvider({ readyState: 'anything but open' });
-                    const timingObject = new TimingObject(timingProvider);
-
-                    createInvalidStateError.returns(error);
-
-                    timingObject
-                        .update(vector)
-                        .catch((err) => {
-                            expect(err).to.equal(error);
-
-                            expect(createInvalidStateError).to.have.been.calledOnce;
-
-                            done();
-                        });
-                });
-
-            });
-
-            describe('with a readyState that equals open', () => {
-
-                let timingProvider;
-                let timingObject;
-
-                beforeEach(() => {
-                    timingProvider = new TimingProvider({ readyState: 'open' });
-                    timingObject = new TimingObject(timingProvider);
-                });
-
-                it("should call the timingProviderSource's update() method", () => {
-                    timingProvider.update.resolves();
-
-                    return timingObject
-                        .update(vector)
-                        .then(() => {
-                            expect(timingProvider.update).to.have.been.calledOnce;
-                            expect(timingProvider.update).to.have.been.calledWithExactly(vector);
-                        });
-                });
-
-                it("should pass on a promise returned by the timingProviderSource's update() method", () => {
-                    const promise = Promise.resolve();
-
-                    timingProvider.update.returns(promise);
-
-                    expect(timingObject.update(vector)).to.equal(promise);
-                });
-
-                it('should return a promise rejecting a TypeError', (done) => {
-                    timingProvider.update.returns('anything but a promise');
-
-                    timingObject
-                        .update(vector)
-                        .catch((err) => {
-                            expect(err).to.be.an.instanceOf(TypeError);
-
-                            done();
-                        });
-                });
-
-            });
-
-        });
 
         describe('without a timingProviderSource', () => {
 
@@ -846,6 +973,81 @@ describe('TimingObject', () => {
                             expect(err).to.equal(error);
 
                             expect(createIllegalValueError).to.have.been.calledOnce;
+
+                            done();
+                        });
+                });
+
+            });
+
+        });
+
+        describe('with a timingProviderSource', () => {
+
+            let vector;
+
+            beforeEach(() => {
+                vector = { velocity: 0 };
+            });
+
+            describe('with a readyState other than open', () => {
+
+                it('should reject the promise with an InvalidStateError', (done) => {
+                    const error = new Error('a fake error');
+                    const timingProvider = new TimingProvider({ readyState: 'anything but open' });
+                    const timingObject = new TimingObject(timingProvider);
+
+                    createInvalidStateError.returns(error);
+
+                    timingObject
+                        .update(vector)
+                        .catch((err) => {
+                            expect(err).to.equal(error);
+
+                            expect(createInvalidStateError).to.have.been.calledOnce;
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with a readyState that equals open', () => {
+
+                let timingProvider;
+                let timingObject;
+
+                beforeEach(() => {
+                    timingProvider = new TimingProvider({ readyState: 'open' });
+                    timingObject = new TimingObject(timingProvider);
+                });
+
+                it("should call the timingProviderSource's update() method", () => {
+                    timingProvider.update.resolves();
+
+                    return timingObject
+                        .update(vector)
+                        .then(() => {
+                            expect(timingProvider.update).to.have.been.calledOnce;
+                            expect(timingProvider.update).to.have.been.calledWithExactly(vector);
+                        });
+                });
+
+                it("should pass on a promise returned by the timingProviderSource's update() method", () => {
+                    const promise = Promise.resolve();
+
+                    timingProvider.update.returns(promise);
+
+                    expect(timingObject.update(vector)).to.equal(promise);
+                });
+
+                it('should return a promise rejecting a TypeError', (done) => {
+                    timingProvider.update.returns('anything but a promise');
+
+                    timingObject
+                        .update(vector)
+                        .catch((err) => {
+                            expect(err).to.be.an.instanceOf(TypeError);
 
                             done();
                         });
