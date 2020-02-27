@@ -21,13 +21,11 @@ export * from './types/index';
 
 export { filterTimingStateVectorUpdate };
 
-const createEventTarget = createEventTargetFactory(window);
-
 const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectConstructor(
     createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
     createIllegalValueError,
     createInvalidStateError,
-    createEventTargetConstructor(createEventTarget, wrapEventListener),
+    createEventTargetConstructor(createEventTargetFactory(window), wrapEventListener),
     filterTimingStateVectorUpdate,
     performance,
     setTimeout,
