@@ -13,7 +13,6 @@ import { translateTimingStateVector } from '../../src/functions/translate-timing
 import { wrapEventListener } from '../../src/functions/wrap-event-listener';
 
 describe('TimingObject', () => {
-
     let TimingObject;
     let fakePerformance;
     let fakeSetTimeout;
@@ -65,5 +64,4 @@ describe('TimingObject', () => {
         // Make sure both timingObjects still return the same vector when calling query().
         expect(continuousTimingObject.query()).to.deep.equal(stepwiseTimingObject.query());
     });
-
 });

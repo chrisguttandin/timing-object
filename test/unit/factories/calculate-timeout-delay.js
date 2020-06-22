@@ -4,17 +4,16 @@ import { createCalculatePositiveRealSolution } from '../../../src/factories/calc
 import { createCalculateTimeoutDelay } from '../../../src/factories/calculate-timeout-delay';
 
 describe('calculateTimeoutDelay', () => {
-
     let calculateTimeoutDelay;
 
     beforeEach(() => {
-        calculateTimeoutDelay = createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions)));
+        calculateTimeoutDelay = createCalculateTimeoutDelay(
+            createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))
+        );
     });
 
     describe('without an acceleration', () => {
-
         describe('with a positive velocity', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -32,11 +31,9 @@ describe('calculateTimeoutDelay', () => {
 
                 expect(delay).to.equal(20);
             });
-
         });
 
         describe('with a negative velocity', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -54,15 +51,11 @@ describe('calculateTimeoutDelay', () => {
 
                 expect(delay).to.equal(5);
             });
-
         });
-
     });
 
     describe('with a positive acceleration', () => {
-
         describe('with a positive velocity', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -80,11 +73,9 @@ describe('calculateTimeoutDelay', () => {
 
                 expect(delay).to.equal(10);
             });
-
         });
 
         describe('with a negative velocity', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -102,15 +93,11 @@ describe('calculateTimeoutDelay', () => {
 
                 expect(delay).to.equal(7.5);
             });
-
         });
-
     });
 
     describe('with a negative acceleration', () => {
-
         describe('with a positive velocity', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -128,11 +115,9 @@ describe('calculateTimeoutDelay', () => {
 
                 expect(delay).to.equal(5);
             });
-
         });
 
         describe('with a negative velocity', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -150,9 +135,6 @@ describe('calculateTimeoutDelay', () => {
 
                 expect(delay).to.equal(2.5);
             });
-
         });
-
     });
-
 });

@@ -5,8 +5,8 @@ export const translateTimingStateVector: TTranslateTimingStateVectorFunction = (
 
     return {
         acceleration,
-        position: position + (velocity * delta) + (0.5 * acceleration * delta ** 2),
+        position: position + velocity * delta + 0.5 * acceleration * delta ** 2,
         timestamp: timestamp + delta,
-        velocity: velocity + (acceleration * delta)
+        velocity: velocity + acceleration * delta
     };
 };

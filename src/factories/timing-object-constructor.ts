@@ -11,16 +11,14 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
     setTimeout,
     translateTimingStateVector
 ) => {
-
     return class extends eventTargetConstructor implements ITimingObject {
-
         private _endPosition: number;
 
-        private _onchange: null | [ TEventHandler<this>, TEventHandler<this> ];
+        private _onchange: null | [TEventHandler<this>, TEventHandler<this>];
 
-        private _onerror: null | [ TErrorEventHandler<this>, TErrorEventHandler<this> ];
+        private _onerror: null | [TErrorEventHandler<this>, TErrorEventHandler<this>];
 
-        private _onreadystatechange: null | [ TEventHandler<this>, TEventHandler<this> ];
+        private _onreadystatechange: null | [TEventHandler<this>, TEventHandler<this>];
 
         private _readyState: TConnectionState;
 
@@ -34,33 +32,35 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
         private _vector: ITimingStateVector;
 
-        constructor (timingProviderSource?: ITimingProvider);
-        constructor (vector?: TTimingStateVectorUpdate, startPosition?: number, endPosition?: number);
-        constructor (timingProviderSourceOrVector = { }, startPosition = Number.NEGATIVE_INFINITY, endPosition = Number.POSITIVE_INFINITY) {
+        constructor(timingProviderSource?: ITimingProvider);
+        constructor(vector?: TTimingStateVectorUpdate, startPosition?: number, endPosition?: number);
+        constructor(timingProviderSourceOrVector = {}, startPosition = Number.NEGATIVE_INFINITY, endPosition = Number.POSITIVE_INFINITY) {
             super();
 
-            const { timingProviderSource, vector } = ((<ITimingProvider> timingProviderSourceOrVector).update === undefined) ?
-                ({ timingProviderSource: null, vector: <ITimingStateVector> timingProviderSourceOrVector }) :
-                ({ timingProviderSource: <ITimingProvider> timingProviderSourceOrVector, vector: { } });
+            const { timingProviderSource, vector } =
+                (<ITimingProvider>timingProviderSourceOrVector).update === undefined
+                    ? { timingProviderSource: null, vector: <ITimingStateVector>timingProviderSourceOrVector }
+                    : { timingProviderSource: <ITimingProvider>timingProviderSourceOrVector, vector: {} };
 
-            this._endPosition = (timingProviderSource === null) ? endPosition : timingProviderSource.endPosition;
+            this._endPosition = timingProviderSource === null ? endPosition : timingProviderSource.endPosition;
             this._onchange = null;
             this._onerror = null;
             this._onreadystatechange = null;
-            this._readyState = (timingProviderSource === null) ? 'open' : timingProviderSource.readyState;
-            this._skew = (timingProviderSource === null) ? 0 : timingProviderSource.skew;
-            this._startPosition = (timingProviderSource === null) ? startPosition : timingProviderSource.startPosition;
+            this._readyState = timingProviderSource === null ? 'open' : timingProviderSource.readyState;
+            this._skew = timingProviderSource === null ? 0 : timingProviderSource.skew;
+            this._startPosition = timingProviderSource === null ? startPosition : timingProviderSource.startPosition;
             this._timingProviderSource = timingProviderSource;
             this._timeoutId = null;
-            this._vector = (timingProviderSource === null)
-                ? {
-                    acceleration: 0,
-                    position: 0,
-                    velocity: 0,
-                    ...filterTimingStateVectorUpdate(vector),
-                    timestamp: performance.now() / 1000
-                }
-                : timingProviderSource.vector;
+            this._vector =
+                timingProviderSource === null
+                    ? {
+                          acceleration: 0,
+                          position: 0,
+                          velocity: 0,
+                          ...filterTimingStateVectorUpdate(vector),
+                          timestamp: performance.now() / 1000
+                      }
+                    : timingProviderSource.vector;
 
             // @todo The spec doesn't require to check if the endPosition is actually greater than the startPosition.
 
@@ -117,15 +117,15 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             }
         }
 
-        get endPosition (): number {
+        get endPosition(): number {
             return this._endPosition;
         }
 
-        get onchange (): null | TEventHandler<this> {
+        get onchange(): null | TEventHandler<this> {
             return this._onchange === null ? this._onchange : this._onchange[0];
         }
 
-        set onchange (value) {
+        set onchange(value) {
             if (this._onchange !== null) {
                 this.removeEventListener('change', this._onchange[1]);
             }
@@ -135,37 +135,37 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
                 this.addEventListener('change', boundListener);
 
-                this._onchange = [ value, boundListener ];
+                this._onchange = [value, boundListener];
             } else {
                 this._onchange = null;
             }
         }
 
-        get onerror (): null | TErrorEventHandler<this> {
+        get onerror(): null | TErrorEventHandler<this> {
             return this._onerror === null ? this._onerror : this._onerror[0];
         }
 
-        set onerror (value) {
+        set onerror(value) {
             if (this._onerror !== null) {
-                (<ITimingObject> this).removeEventListener('error', this._onerror[1]);
+                (<ITimingObject>this).removeEventListener('error', this._onerror[1]);
             }
 
             if (typeof value === 'function') {
                 const boundListener = value.bind(this);
 
-                (<ITimingObject> this).addEventListener('error', boundListener);
+                (<ITimingObject>this).addEventListener('error', boundListener);
 
-                this._onerror = [ value, boundListener ];
+                this._onerror = [value, boundListener];
             } else {
                 this._onerror = null;
             }
         }
 
-        get onreadystatechange (): null | TEventHandler<this> {
-            return (this._onreadystatechange === null) ? this._onreadystatechange : this._onreadystatechange[0];
+        get onreadystatechange(): null | TEventHandler<this> {
+            return this._onreadystatechange === null ? this._onreadystatechange : this._onreadystatechange[0];
         }
 
-        set onreadystatechange (value) {
+        set onreadystatechange(value) {
             if (this._onreadystatechange !== null) {
                 this.removeEventListener('readystatechange', this._onreadystatechange[1]);
             }
@@ -175,25 +175,25 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
                 this.addEventListener('readystatechange', boundListener);
 
-                this._onreadystatechange = [ value, boundListener ];
+                this._onreadystatechange = [value, boundListener];
             } else {
                 this._onreadystatechange = null;
             }
         }
 
-        get readyState (): TConnectionState {
+        get readyState(): TConnectionState {
             return this._readyState;
         }
 
-        get startPosition (): number {
+        get startPosition(): number {
             return this._startPosition;
         }
 
-        get timingProviderSource (): null | ITimingProvider {
+        get timingProviderSource(): null | ITimingProvider {
             return this._timingProviderSource;
         }
 
-        public query (): ITimingStateVector {
+        public query(): ITimingStateVector {
             if (this._readyState !== 'open') {
                 throw createInvalidStateError();
             }
@@ -201,16 +201,15 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             const timestamp = performance.now() / 1000;
 
             // @todo Compute the delta by gradually applying the skew.
-            const delta = (this._timingProviderSource === null) ?
-                timestamp - this._vector.timestamp :
-                timestamp + this._skew - this._vector.timestamp;
+            const delta =
+                this._timingProviderSource === null ? timestamp - this._vector.timestamp : timestamp + this._skew - this._vector.timestamp;
             const vector = translateTimingStateVector(this._vector, delta);
 
             if (this._endPosition < vector.position || this._startPosition > vector.position) {
                 this._setInternalVector({
                     ...vector,
                     acceleration: 0,
-                    position: (this._endPosition < vector.position) ? this._endPosition : this._startPosition,
+                    position: this._endPosition < vector.position ? this._endPosition : this._startPosition,
                     velocity: 0
                 });
 
@@ -220,7 +219,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             return vector;
         }
 
-        public update (newVector: TTimingStateVectorUpdate): Promise<void> {
+        public update(newVector: TTimingStateVectorUpdate): Promise<void> {
             if (this._readyState !== 'open') {
                 return Promise.reject(createInvalidStateError());
             }
@@ -245,9 +244,12 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             const normalizedNewVector = { ...this.query(), ...filteredVector };
             const { position, velocity, acceleration } = normalizedNewVector;
 
-            if ((position < this._startPosition || position > this._endPosition) ||
-                    (position === this._startPosition && (velocity < 0 || (velocity === 0 && acceleration < 0))) ||
-                    (position === this._endPosition && (velocity > 0 || (velocity === 0 && acceleration > 0)))) {
+            if (
+                position < this._startPosition ||
+                position > this._endPosition ||
+                (position === this._startPosition && (velocity < 0 || (velocity === 0 && acceleration < 0))) ||
+                (position === this._endPosition && (velocity > 0 || (velocity === 0 && acceleration > 0)))
+            ) {
                 return Promise.reject(createIllegalValueError());
             }
 
@@ -256,20 +258,24 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             return Promise.resolve();
         }
 
-        private _isAllowedTransition (readyState: TConnectionState): boolean {
-            return ((this._readyState === 'closing' && readyState === 'closed')
-                || this._readyState === 'connecting'
-                || (this._readyState === 'open' && (readyState === 'closed' || readyState === 'closing')));
+        private _isAllowedTransition(readyState: TConnectionState): boolean {
+            return (
+                (this._readyState === 'closing' && readyState === 'closed') ||
+                this._readyState === 'connecting' ||
+                (this._readyState === 'open' && (readyState === 'closed' || readyState === 'closing'))
+            );
         }
 
-        private _setInternalTimeout (): void {
+        private _setInternalTimeout(): void {
             if (this._timeoutId !== null) {
                 clearTimeout(this._timeoutId);
                 this._timeoutId = null;
             }
 
-            if ((this._endPosition === Number.POSITIVE_INFINITY && this._startPosition === Number.NEGATIVE_INFINITY) ||
-                    (this._vector.acceleration === 0 && this._vector.velocity === 0)) {
+            if (
+                (this._endPosition === Number.POSITIVE_INFINITY && this._startPosition === Number.NEGATIVE_INFINITY) ||
+                (this._vector.acceleration === 0 && this._vector.velocity === 0)
+            ) {
                 return;
             }
 
@@ -282,14 +288,12 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
             this._timeoutId = setTimeout(() => this.query(), delay);
         }
 
-        private _setInternalVector (vector: ITimingStateVector): void {
+        private _setInternalVector(vector: ITimingStateVector): void {
             this._vector = vector;
 
             this._setInternalTimeout();
 
             setTimeout(() => this.dispatchEvent(new Event('change')));
         }
-
     };
-
 };

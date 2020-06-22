@@ -1,5 +1,4 @@
 export interface ITimingProviderEventMap {
-
     adjust: Event;
 
     change: Event;
@@ -7,5 +6,4 @@ export interface ITimingProviderEventMap {
     // @todo error: ErrorEvent;
 
     readystatechange: Event;
-
 }

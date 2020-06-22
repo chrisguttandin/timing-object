@@ -6,8 +6,7 @@ import { wrapEventListener } from '../../src/functions/wrap-event-listener';
 const DEFAULT_VECTOR = { acceleration: 0, position: 0, velocity: 0 };
 
 export class TimingProvider extends createEventTargetConstructor(createEventTargetFactory(window), wrapEventListener) {
-
-    constructor (options = { }) {
+    constructor(options = {}) {
         super();
 
         const {
@@ -25,5 +24,4 @@ export class TimingProvider extends createEventTargetConstructor(createEventTarg
         this.update = stub();
         this.vector = { ...DEFAULT_VECTOR, ...vector };
     }
-
 }

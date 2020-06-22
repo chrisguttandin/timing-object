@@ -1,5 +1,4 @@
 export interface ITimingObjectEventMap {
-
     change: Event;
 
     error: ErrorEvent;
@@ -7,5 +6,4 @@ export interface ITimingObjectEventMap {
     readystatechange: Event;
 
     // @todo timeupdate: Event;
-
 }

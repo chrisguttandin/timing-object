@@ -1,5 +1,4 @@
 export interface ITimingStateVector {
-
     readonly acceleration: number;
 
     readonly position: number;
@@ -7,5 +6,4 @@ export interface ITimingStateVector {
     readonly timestamp: number;
 
     readonly velocity: number;
-
 }

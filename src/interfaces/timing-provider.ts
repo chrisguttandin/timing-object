@@ -4,7 +4,6 @@ import { ITimingStateVector } from './timing-state-vector';
 
 // @todo It is not specified that the TimingProvider should implement the EventTarget interface.
 export interface ITimingProvider extends TNativeEventTarget {
-
     readonly endPosition: number;
 
     // @todo error is not part of the specification.
@@ -30,22 +29,21 @@ export interface ITimingProvider extends TNativeEventTarget {
 
     readonly vector: ITimingStateVector;
 
-    addEventListener<K extends keyof ITimingProviderEventMap> (
+    addEventListener<K extends keyof ITimingProviderEventMap>(
         type: K,
         listener: (this: this, event: ITimingProviderEventMap[K]) => void,
         options?: boolean | AddEventListenerOptions
     ): void;
 
-    addEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
 
-    removeEventListener<K extends keyof ITimingProviderEventMap> (
+    removeEventListener<K extends keyof ITimingProviderEventMap>(
         type: K,
         listener: (this: this, event: ITimingProviderEventMap[K]) => void,
         options?: boolean | EventListenerOptions
     ): void;
 
-    removeEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 
-    update (newVector: TTimingStateVectorUpdate): Promise<void>;
-
+    update(newVector: TTimingStateVectorUpdate): Promise<void>;
 }

@@ -1,17 +1,13 @@
 import { filterTimingStateVectorUpdate } from '../../../src/functions/filter-timing-state-vector-update';
 
 describe('filterTimingStateVectorUpdate()', () => {
-
     describe('without a given vector', () => {
-
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate()).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate()).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with an acceleration of null', () => {
-
         let vector;
 
         beforeEach(() => {
@@ -19,13 +15,11 @@ describe('filterTimingStateVectorUpdate()', () => {
         });
 
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with an acceleration of undefined', () => {
-
         let vector;
 
         beforeEach(() => {
@@ -33,13 +27,11 @@ describe('filterTimingStateVectorUpdate()', () => {
         });
 
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with an acceleration', () => {
-
         let acceleration;
         let vector;
 
@@ -51,11 +43,9 @@ describe('filterTimingStateVectorUpdate()', () => {
         it('should return an object with the given acceleration', () => {
             expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ acceleration });
         });
-
     });
 
     describe('with a vector with a position of null', () => {
-
         let vector;
 
         beforeEach(() => {
@@ -63,13 +53,11 @@ describe('filterTimingStateVectorUpdate()', () => {
         });
 
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with a position of undefined', () => {
-
         let vector;
 
         beforeEach(() => {
@@ -77,13 +65,11 @@ describe('filterTimingStateVectorUpdate()', () => {
         });
 
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with a position', () => {
-
         let position;
         let vector;
 
@@ -95,11 +81,9 @@ describe('filterTimingStateVectorUpdate()', () => {
         it('should return an object with the given position', () => {
             expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ position });
         });
-
     });
 
     describe('with a vector with a velocity of null', () => {
-
         let vector;
 
         beforeEach(() => {
@@ -107,13 +91,11 @@ describe('filterTimingStateVectorUpdate()', () => {
         });
 
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with a velocity of undefined', () => {
-
         let vector;
 
         beforeEach(() => {
@@ -121,13 +103,11 @@ describe('filterTimingStateVectorUpdate()', () => {
         });
 
         it('should return an empty object', () => {
-            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ });
+            expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({});
         });
-
     });
 
     describe('with a vector with a velocity', () => {
-
         let vector;
         let velocity;
 
@@ -139,7 +119,5 @@ describe('filterTimingStateVectorUpdate()', () => {
         it('should return an object with the given velocity', () => {
             expect(filterTimingStateVectorUpdate(vector)).to.deep.equal({ velocity });
         });
-
     });
-
 });

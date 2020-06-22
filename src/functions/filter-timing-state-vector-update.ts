@@ -2,12 +2,11 @@ import { TFilterTimingStateVectorUpdateFunction, TFilteredTimingStateVectorUpdat
 
 export const filterTimingStateVectorUpdate: TFilterTimingStateVectorUpdateFunction = (vector) => {
     if (vector === undefined) {
-        return { };
+        return {};
     }
 
-    let filteredVector: TFilteredTimingStateVectorUpdate = (vector.acceleration !== null && vector.acceleration !== undefined) ?
-        { acceleration: vector.acceleration } :
-        { };
+    let filteredVector: TFilteredTimingStateVectorUpdate =
+        vector.acceleration !== null && vector.acceleration !== undefined ? { acceleration: vector.acceleration } : {};
 
     if (vector.position !== null && vector.position !== undefined) {
         filteredVector = { ...filteredVector, position: vector.position };

@@ -12,7 +12,6 @@ import { translateTimingStateVector } from '../../../src/functions/translate-tim
 import { wrapEventListener } from '../../../src/functions/wrap-event-listener';
 
 describe('TimingObject', () => {
-
     let TimingObject;
     let createIllegalValueError;
     let createInvalidStateError;
@@ -41,7 +40,6 @@ describe('TimingObject', () => {
     });
 
     describe('constructor()', () => {
-
         it('should handle a given vector positioned between the startPosition and endPosition', () => {
             const timingObject = new TimingObject({ acceleration: 1.5, position: 2, velocity: 1 }, 1, 3);
 
@@ -89,13 +87,10 @@ describe('TimingObject', () => {
             // The second argument specifies the delay.
             expect(fakeSetTimeout.firstCall.args[1]).to.equal(1);
         });
-
     });
 
     describe('endPosition', () => {
-
         describe('without a timingProviderSource', () => {
-
             it('should default to infinity', () => {
                 const timingObject = new TimingObject();
 
@@ -104,15 +99,13 @@ describe('TimingObject', () => {
 
             it('should return the given value', () => {
                 const endPosition = 23;
-                const timingObject = new TimingObject({ }, 12, endPosition);
+                const timingObject = new TimingObject({}, 12, endPosition);
 
                 expect(timingObject.endPosition).to.equal(endPosition);
             });
-
         });
 
         describe('with a timingProviderSource', () => {
-
             it("should equal the timingProviderSource's endPosition", () => {
                 const endPosition = 30;
                 const timingProvider = new TimingProvider({ endPosition });
@@ -120,15 +113,11 @@ describe('TimingObject', () => {
 
                 expect(timingObject.endPosition).to.equal(endPosition);
             });
-
         });
-
     });
 
     describe('onchange', () => {
-
         describe('without a timingProviderSource', () => {
-
             let timingObject;
 
             beforeEach(() => {
@@ -141,14 +130,14 @@ describe('TimingObject', () => {
 
             it('should be assignable to a function', () => {
                 const fn = () => {};
-                const onchange = timingObject.onchange = fn; // eslint-disable-line no-multi-assign
+                const onchange = (timingObject.onchange = fn); // eslint-disable-line no-multi-assign
 
                 expect(onchange).to.equal(fn);
                 expect(timingObject.onchange).to.equal(fn);
             });
 
             it('should be assignable to null', () => {
-                const onchange = timingObject.onchange = null; // eslint-disable-line no-multi-assign
+                const onchange = (timingObject.onchange = null); // eslint-disable-line no-multi-assign
 
                 expect(onchange).to.be.null;
                 expect(timingObject.onchange).to.be.null;
@@ -159,7 +148,7 @@ describe('TimingObject', () => {
 
                 timingObject.onchange = () => {};
 
-                const onchange = timingObject.onchange = string; // eslint-disable-line no-multi-assign
+                const onchange = (timingObject.onchange = string); // eslint-disable-line no-multi-assign
 
                 expect(onchange).to.equal(string);
                 expect(timingObject.onchange).to.be.null;
@@ -177,11 +166,9 @@ describe('TimingObject', () => {
             });
 
             // @todo
-
         });
 
         describe('with a timingProviderSource', () => {
-
             let timingObject;
             let timingProvider;
 
@@ -218,13 +205,10 @@ describe('TimingObject', () => {
                 timingProvider.vector = { acceleration: 0, position: 2, velocity: 1 };
                 timingProvider.dispatchEvent(new Event('change'));
             });
-
         });
-
     });
 
     describe('onerror', () => {
-
         let timingObject;
 
         beforeEach(() => {
@@ -237,14 +221,14 @@ describe('TimingObject', () => {
 
         it('should be assignable to a function', () => {
             const fn = () => {};
-            const onerror = timingObject.onerror = fn; // eslint-disable-line no-multi-assign
+            const onerror = (timingObject.onerror = fn); // eslint-disable-line no-multi-assign
 
             expect(onerror).to.equal(fn);
             expect(timingObject.onerror).to.equal(fn);
         });
 
         it('should be assignable to null', () => {
-            const onerror = timingObject.onerror = null; // eslint-disable-line no-multi-assign
+            const onerror = (timingObject.onerror = null); // eslint-disable-line no-multi-assign
 
             expect(onerror).to.be.null;
             expect(timingObject.onerror).to.be.null;
@@ -255,7 +239,7 @@ describe('TimingObject', () => {
 
             timingObject.onerror = () => {};
 
-            const onerror = timingObject.onerror = string; // eslint-disable-line no-multi-assign
+            const onerror = (timingObject.onerror = string); // eslint-disable-line no-multi-assign
 
             expect(onerror).to.equal(string);
             expect(timingObject.onerror).to.be.null;
@@ -271,13 +255,10 @@ describe('TimingObject', () => {
 
             expect(onerror).to.have.been.calledTwice;
         });
-
     });
 
     describe('onreadystatechange', () => {
-
         describe('without a timingProviderSource', () => {
-
             let timingObject;
 
             beforeEach(() => {
@@ -290,14 +271,14 @@ describe('TimingObject', () => {
 
             it('should be assignable to a function', () => {
                 const fn = () => {};
-                const onreadystatechange = timingObject.onreadystatechange = fn; // eslint-disable-line no-multi-assign
+                const onreadystatechange = (timingObject.onreadystatechange = fn); // eslint-disable-line no-multi-assign
 
                 expect(onreadystatechange).to.equal(fn);
                 expect(timingObject.onreadystatechange).to.equal(fn);
             });
 
             it('should be assignable to null', () => {
-                const onreadystatechange = timingObject.onreadystatechange = null; // eslint-disable-line no-multi-assign
+                const onreadystatechange = (timingObject.onreadystatechange = null); // eslint-disable-line no-multi-assign
 
                 expect(onreadystatechange).to.be.null;
                 expect(timingObject.onreadystatechange).to.be.null;
@@ -308,7 +289,7 @@ describe('TimingObject', () => {
 
                 timingObject.onreadystatechange = () => {};
 
-                const onreadystatechange = timingObject.onreadystatechange = string; // eslint-disable-line no-multi-assign
+                const onreadystatechange = (timingObject.onreadystatechange = string); // eslint-disable-line no-multi-assign
 
                 expect(onreadystatechange).to.equal(string);
                 expect(timingObject.onreadystatechange).to.be.null;
@@ -337,11 +318,9 @@ describe('TimingObject', () => {
                     done();
                 };
             });
-
         });
 
         describe('with a timingProviderSource', () => {
-
             let timingObject;
             let timingProvider;
 
@@ -351,7 +330,6 @@ describe('TimingObject', () => {
             });
 
             describe('with a valid transition', () => {
-
                 it('should pass on an readystatechange event', (done) => {
                     timingObject.onreadystatechange = function (event) {
                         expect(event).to.be.an.instanceOf(Event);
@@ -378,11 +356,9 @@ describe('TimingObject', () => {
                     timingProvider.readyState = 'closing';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
                 });
-
             });
 
             describe('with an invalid transition', () => {
-
                 it('should pass on an readystatechange event', (done) => {
                     timingObject.onreadystatechange = function (event) {
                         expect(event).to.be.an.instanceOf(Event);
@@ -425,27 +401,20 @@ describe('TimingObject', () => {
                     timingProvider.readyState = 'connecting';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
                 });
-
             });
-
         });
-
     });
 
     describe('readyState', () => {
-
         describe('without a timingProviderSource', () => {
-
             it('should be open', () => {
                 const timingObject = new TimingObject();
 
                 expect(timingObject.readyState).to.equal('open');
             });
-
         });
 
         describe('with a timingProviderSource', () => {
-
             it("should equal the timingProviderSource's readyState", () => {
                 const readyState = 'a fake readyState';
                 const timingProvider = new TimingProvider({ readyState });
@@ -453,15 +422,11 @@ describe('TimingObject', () => {
 
                 expect(timingObject.readyState).to.equal(readyState);
             });
-
         });
-
     });
 
     describe('startPosition', () => {
-
         describe('without a timingProviderSource', () => {
-
             it('should default to negative infinity', () => {
                 const timingObject = new TimingObject();
 
@@ -470,15 +435,13 @@ describe('TimingObject', () => {
 
             it('should return the given value', () => {
                 const startPosition = 78;
-                const timingObject = new TimingObject({ }, startPosition);
+                const timingObject = new TimingObject({}, startPosition);
 
                 expect(timingObject.startPosition).to.equal(startPosition);
             });
-
         });
 
         describe('with a timingProviderSource', () => {
-
             it("should equal the timingProviderSource's startPosition", () => {
                 const startPosition = 30;
                 const timingProvider = new TimingProvider({ startPosition });
@@ -486,48 +449,34 @@ describe('TimingObject', () => {
 
                 expect(timingObject.startPosition).to.equal(startPosition);
             });
-
         });
-
     });
 
     describe('timingProviderSource', () => {
-
         describe('without a timingProviderSource', () => {
-
             it('should default to null', () => {
                 const timingObject = new TimingObject();
 
                 expect(timingObject.timingProviderSource).to.be.null;
             });
-
         });
 
         describe('with a timingProviderSource', () => {
-
             it('should return the timingProviderSource', () => {
                 const timingProvider = new TimingProvider();
                 const timingObject = new TimingObject(timingProvider);
 
                 expect(timingObject.timingProviderSource).to.equal(timingProvider);
             });
-
         });
-
     });
 
-    describe('addEventListener()', () => {
+    describe('addEventListener()', () => {});
 
-    });
-
-    describe('dispatchEvent()', () => {
-
-    });
+    describe('dispatchEvent()', () => {});
 
     describe('query()', () => {
-
         describe('with a readyState other than open', () => {
-
             it('should throw an InvalidStateError', (done) => {
                 const error = new Error('a fake error');
                 const timingObject = new TimingObject();
@@ -546,11 +495,9 @@ describe('TimingObject', () => {
                     done();
                 }
             });
-
         });
 
         describe('with a vector without any movement', () => {
-
             it('should not move', () => {
                 const timingObject = new TimingObject({ position: 2 });
 
@@ -572,11 +519,9 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
             });
-
         });
 
         describe('with a vector with constant movement', () => {
-
             it('should move constantly', () => {
                 const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
@@ -598,11 +543,9 @@ describe('TimingObject', () => {
                     velocity: 1
                 });
             });
-
         });
 
         describe('with a vector with accelerated movement', () => {
-
             it('should move with an accelerated velocity', () => {
                 const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
@@ -624,11 +567,9 @@ describe('TimingObject', () => {
                     velocity: 19
                 });
             });
-
         });
 
         describe('with a given endPosition', () => {
-
             let timingObject;
 
             beforeEach(() => {
@@ -660,11 +601,9 @@ describe('TimingObject', () => {
 
                 timingObject.onchange = () => done();
             });
-
         });
 
         describe('with a given startPosition', () => {
-
             let timingObject;
 
             beforeEach(() => {
@@ -696,21 +635,14 @@ describe('TimingObject', () => {
 
                 timingObject.onchange = () => done();
             });
-
         });
-
     });
 
-    describe('removeEventListener()', () => {
-
-    });
+    describe('removeEventListener()', () => {});
 
     describe('update()', () => {
-
         describe('without a timingProviderSource', () => {
-
             describe('with a readyState other than open', () => {
-
                 it('should reject the promise with an InvalidStateError', (done) => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject();
@@ -719,21 +651,17 @@ describe('TimingObject', () => {
                     timingObject._readyState = 'anything but open';
                     createInvalidStateError.returns(error);
 
-                    timingObject
-                        .update({ velocity: 0 })
-                        .catch((err) => {
-                            expect(err).to.equal(error);
+                    timingObject.update({ velocity: 0 }).catch((err) => {
+                        expect(err).to.equal(error);
 
-                            expect(createInvalidStateError).to.have.been.calledOnce;
+                        expect(createInvalidStateError).to.have.been.calledOnce;
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a vector containing no property values other than null or undefined', () => {
-
                 it('should not emit a change event', (done) => {
                     const timingObject = new TimingObject();
 
@@ -746,11 +674,9 @@ describe('TimingObject', () => {
                         done();
                     }, 500);
                 });
-
             });
 
             describe('with a vector containing numeric property values', () => {
-
                 it('should emit a change event', (done) => {
                     const timingObject = new TimingObject();
 
@@ -770,26 +696,22 @@ describe('TimingObject', () => {
                     // The second argument specifies the delay.
                     expect(fakeSetTimeout.firstCall.args[1]).to.equal(0.5);
                 });
-
             });
 
             describe('with a vector without any movement', () => {
-
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ acceleration: 2 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 2,
-                                position: 2,
-                                timestamp: 17,
-                                velocity: 0
-                            });
+                    return timingObject.update({ acceleration: 2 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 2,
+                            position: 2,
+                            timestamp: 17,
+                            velocity: 0
                         });
+                    });
                 });
 
                 it('should update the position of the vector', () => {
@@ -797,16 +719,14 @@ describe('TimingObject', () => {
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ position: 3 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 0,
-                                position: 3,
-                                timestamp: 17,
-                                velocity: 0
-                            });
+                    return timingObject.update({ position: 3 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 0,
+                            position: 3,
+                            timestamp: 17,
+                            velocity: 0
                         });
+                    });
                 });
 
                 it('should update the velocity of the vector', () => {
@@ -814,37 +734,31 @@ describe('TimingObject', () => {
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ velocity: 1 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 0,
-                                position: 2,
-                                timestamp: 17,
-                                velocity: 1
-                            });
+                    return timingObject.update({ velocity: 1 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 0,
+                            position: 2,
+                            timestamp: 17,
+                            velocity: 1
                         });
+                    });
                 });
-
             });
 
             describe('with a vector with constant movement', () => {
-
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ acceleration: 2 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 2,
-                                position: 3,
-                                timestamp: 17,
-                                velocity: 1
-                            });
+                    return timingObject.update({ acceleration: 2 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 2,
+                            position: 3,
+                            timestamp: 17,
+                            velocity: 1
                         });
+                    });
                 });
 
                 it('should update the position of the vector', () => {
@@ -852,16 +766,14 @@ describe('TimingObject', () => {
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ position: 5 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 0,
-                                position: 5,
-                                timestamp: 17,
-                                velocity: 1
-                            });
+                    return timingObject.update({ position: 5 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 0,
+                            position: 5,
+                            timestamp: 17,
+                            velocity: 1
                         });
+                    });
                 });
 
                 it('should update the velocity of the vector', () => {
@@ -869,37 +781,31 @@ describe('TimingObject', () => {
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ velocity: 0.5 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 0,
-                                position: 3,
-                                timestamp: 17,
-                                velocity: 0.5
-                            });
+                    return timingObject.update({ velocity: 0.5 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 0,
+                            position: 3,
+                            timestamp: 17,
+                            velocity: 0.5
                         });
+                    });
                 });
-
             });
 
             describe('with a vector with accelerated movement', () => {
-
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ acceleration: 2 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 2,
-                                position: 3.6,
-                                timestamp: 17,
-                                velocity: 2.2
-                            });
+                    return timingObject.update({ acceleration: 2 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 2,
+                            position: 3.6,
+                            timestamp: 17,
+                            velocity: 2.2
                         });
+                    });
                 });
 
                 it('should update the position of the vector', () => {
@@ -907,16 +813,14 @@ describe('TimingObject', () => {
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ position: 5 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 1.2,
-                                position: 5,
-                                timestamp: 17,
-                                velocity: 2.2
-                            });
+                    return timingObject.update({ position: 5 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 1.2,
+                            position: 5,
+                            timestamp: 17,
+                            velocity: 2.2
                         });
+                    });
                 });
 
                 it('should update the velocity of the vector', () => {
@@ -924,66 +828,53 @@ describe('TimingObject', () => {
 
                     fakePerformance.now.returns(17000);
 
-                    return timingObject
-                        .update({ velocity: 0.5 })
-                        .then(() => {
-                            expect(timingObject.query()).to.deep.equal({
-                                acceleration: 1.2,
-                                position: 3.6,
-                                timestamp: 17,
-                                velocity: 0.5
-                            });
+                    return timingObject.update({ velocity: 0.5 }).then(() => {
+                        expect(timingObject.query()).to.deep.equal({
+                            acceleration: 1.2,
+                            position: 3.6,
+                            timestamp: 17,
+                            velocity: 0.5
                         });
+                    });
                 });
-
             });
 
             describe('with a given endPosition', () => {
-
                 it('should reject a vector positioned above the endPosition', (done) => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 0, velocity: 1 }, 0, 1);
 
                     createIllegalValueError.returns(error);
 
-                    timingObject
-                        .update({ position: 2 })
-                        .catch((err) => {
-                            expect(err).to.equal(error);
+                    timingObject.update({ position: 2 }).catch((err) => {
+                        expect(err).to.equal(error);
 
-                            expect(createIllegalValueError).to.have.been.calledOnce;
+                        expect(createIllegalValueError).to.have.been.calledOnce;
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a given startPosition', () => {
-
                 it('should reject a vector positioned below the startPosition', (done) => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 3, velocity: 1 }, 3, 4);
 
                     createIllegalValueError.returns(error);
 
-                    timingObject
-                        .update({ position: 2 })
-                        .catch((err) => {
-                            expect(err).to.equal(error);
+                    timingObject.update({ position: 2 }).catch((err) => {
+                        expect(err).to.equal(error);
 
-                            expect(createIllegalValueError).to.have.been.calledOnce;
+                        expect(createIllegalValueError).to.have.been.calledOnce;
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
-
         });
 
         describe('with a timingProviderSource', () => {
-
             let vector;
 
             beforeEach(() => {
@@ -991,7 +882,6 @@ describe('TimingObject', () => {
             });
 
             describe('with a readyState other than open', () => {
-
                 it('should reject the promise with an InvalidStateError', (done) => {
                     const error = new Error('a fake error');
                     const timingProvider = new TimingProvider({ readyState: 'anything but open' });
@@ -999,21 +889,17 @@ describe('TimingObject', () => {
 
                     createInvalidStateError.returns(error);
 
-                    timingObject
-                        .update(vector)
-                        .catch((err) => {
-                            expect(err).to.equal(error);
+                    timingObject.update(vector).catch((err) => {
+                        expect(err).to.equal(error);
 
-                            expect(createInvalidStateError).to.have.been.calledOnce;
+                        expect(createInvalidStateError).to.have.been.calledOnce;
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a readyState that equals open', () => {
-
                 let timingProvider;
                 let timingObject;
 
@@ -1025,12 +911,10 @@ describe('TimingObject', () => {
                 it("should call the timingProviderSource's update() method", () => {
                     timingProvider.update.resolves();
 
-                    return timingObject
-                        .update(vector)
-                        .then(() => {
-                            expect(timingProvider.update).to.have.been.calledOnce;
-                            expect(timingProvider.update).to.have.been.calledWithExactly(vector);
-                        });
+                    return timingObject.update(vector).then(() => {
+                        expect(timingProvider.update).to.have.been.calledOnce;
+                        expect(timingProvider.update).to.have.been.calledWithExactly(vector);
+                    });
                 });
 
                 it("should pass on a promise returned by the timingProviderSource's update() method", () => {
@@ -1044,19 +928,13 @@ describe('TimingObject', () => {
                 it('should return a promise rejecting a TypeError', (done) => {
                     timingProvider.update.returns('anything but a promise');
 
-                    timingObject
-                        .update(vector)
-                        .catch((err) => {
-                            expect(err).to.be.an.instanceOf(TypeError);
+                    timingObject.update(vector).catch((err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
-
         });
-
     });
-
 });
