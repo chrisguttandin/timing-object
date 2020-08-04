@@ -129,7 +129,7 @@ describe('TimingObject', () => {
             });
 
             it('should be assignable to a function', () => {
-                const fn = () => {};
+                const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
                 const onchange = (timingObject.onchange = fn); // eslint-disable-line no-multi-assign
 
                 expect(onchange).to.equal(fn);
@@ -220,7 +220,7 @@ describe('TimingObject', () => {
         });
 
         it('should be assignable to a function', () => {
-            const fn = () => {};
+            const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
             const onerror = (timingObject.onerror = fn); // eslint-disable-line no-multi-assign
 
             expect(onerror).to.equal(fn);
@@ -270,7 +270,7 @@ describe('TimingObject', () => {
             });
 
             it('should be assignable to a function', () => {
-                const fn = () => {};
+                const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
                 const onreadystatechange = (timingObject.onreadystatechange = fn); // eslint-disable-line no-multi-assign
 
                 expect(onreadystatechange).to.equal(fn);
