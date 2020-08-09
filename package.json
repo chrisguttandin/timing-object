@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.11.2",
-        "tslib": "^2.0.0"
+        "tslib": "^2.0.1"
     },
     "description": "An implementation of the timing object specification.",
     "devDependencies": {
