@@ -3,24 +3,28 @@ const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
     config.set({
-        browserNoActivityTimeout: 20000,
+        basePath: '../../',
+
+        browserDisconnectTimeout: 100000,
+
+        browserNoActivityTimeout: 100000,
 
         concurrency: 1,
 
         files: [
             {
                 included: false,
-                pattern: '../../src/**',
+                pattern: 'src/**',
                 served: false,
                 watched: true
             },
-            '../../test/unit/**/*.js'
+            'test/unit/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
-            '../../test/unit/**/*.js': 'webpack'
+            'test/unit/**/*.js': 'webpack'
         },
 
         webpack: {

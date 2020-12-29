@@ -1,25 +1,30 @@
 const { env } = require('process');
+const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
     config.set({
-        browserNoActivityTimeout: 20000,
+        basePath: '../../',
+
+        browserDisconnectTimeout: 100000,
+
+        browserNoActivityTimeout: 100000,
 
         concurrency: 1,
 
         files: [
             {
                 included: false,
-                pattern: '../../src/**',
+                pattern: 'src/**',
                 served: false,
                 watched: true
             },
-            '../../test/integration/**/*.js'
+            'test/integration/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
-            '../../test/integration/**/*.js': 'webpack'
+            'test/integration/**/*.js': 'webpack'
         },
 
         webpack: {
@@ -34,6 +39,13 @@ module.exports = (config) => {
                     }
                 ]
             },
+            plugins: [
+                new DefinePlugin({
+                    'process.env': {
+                        CI: JSON.stringify(env.CI)
+                    }
+                })
+            ],
             resolve: {
                 extensions: ['.js', '.ts']
             }
