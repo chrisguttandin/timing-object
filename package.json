@@ -38,7 +38,7 @@
         "karma-mocha": "^2.0.1",
         "karma-safari-launcher": "^1.0.0",
         "karma-sinon-chai": "^2.0.2",
-        "karma-webpack": "^4.0.2",
+        "karma-webpack": "^5.0.0",
         "load-grunt-config": "^3.0.1",
         "mocha": "^8.2.1",
         "prettier": "^2.2.1",
