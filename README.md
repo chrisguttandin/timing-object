@@ -2,7 +2,6 @@
 
 **An implementation of the timing object specification.**
 
-[![tests](https://img.shields.io/travis/chrisguttandin/timing-object/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/timing-object)
 [![dependencies](https://img.shields.io/david/chrisguttandin/timing-object.svg?style=flat-square)](https://www.npmjs.com/package/timing-object)
 [![version](https://img.shields.io/npm/v/timing-object.svg?style=flat-square)](https://www.npmjs.com/package/timing-object)
 
@@ -44,9 +43,7 @@ compatible
 import { ITimingProvider, TimingObject } from 'timing-object';
 
 class MyCrazyTimingProvider implements ITimingProvider {
-
     // ... your implementation ...
-
 }
 ```
 
