@@ -2,7 +2,7 @@
 
 **An implementation of the timing object specification.**
 
-[![dependencies](https://img.shields.io/david/chrisguttandin/timing-object.svg?style=flat-square)](https://www.npmjs.com/package/timing-object)
+[![dependencies](https://img.shields.io/david/chrisguttandin/timing-object.svg?style=flat-square)](https://github.com/chrisguttandin/timing-object/network/dependencies)
 [![version](https://img.shields.io/npm/v/timing-object.svg?style=flat-square)](https://www.npmjs.com/package/timing-object)
 
 This is a standalone implementation of the
