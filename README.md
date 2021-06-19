@@ -29,9 +29,30 @@ import { TimingObject } from 'timing-object';
 
 The `TimingObject` implements [the
 spec](https://webtiming.github.io/timingobject/#idl-def-timingobject) with one
-notable difference. It does not support the
-[`timeupdate`](https://webtiming.github.io/timingobject/#dom-timingobject-ontimeupdate)
-event.
+notable difference as mentioned below.
+
+### timeupdate event
+
+The [`timeupdate`](https://webtiming.github.io/timingobject/#dom-timingobject-ontimeupdate)
+event is not implemented.
+
+According to the spec it should fire "periodically with [a] fixed frequency [of] 5Hz". Unfortunately there is no way to fire an event in the browser with a constant frequency. Even if it would be possible it would probably only work for very few use cases. For the most part it will either fire too often or not often enough.
+
+Let's say the `timeupdate` should be used to update the UI. Modern browsers refresh the screen about 60 times per second. Thus an event that fires only 5 times a second will not fire often enough to update the screen every frame. The better alternative is to use `requestAnimationFrame()`. It can be used to schedule a function which runs once per animation frame (at approximately 60Hz).
+
+```js
+import { TimingObject } from 'timing-object';
+
+const timingObject = new TimingObject();
+
+requestAnimationFrame(function updateUI() {
+    const vector = timingObject.query();
+
+    // ... do something with the vector ...
+
+    requestAnimationFrame(updateUI);
+});
+```
 
 ## ITimingProvider interface
 
