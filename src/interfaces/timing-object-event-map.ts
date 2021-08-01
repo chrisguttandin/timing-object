@@ -1,4 +1,4 @@
-export interface ITimingObjectEventMap {
+export interface ITimingObjectEventMap extends Record<string, Event> {
     change: Event;
 
     error: ErrorEvent;

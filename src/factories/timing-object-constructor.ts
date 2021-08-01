@@ -147,13 +147,13 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
 
         set onerror(value) {
             if (this._onerror !== null) {
-                (<ITimingObject>this).removeEventListener('error', this._onerror[1]);
+                this.removeEventListener('error', this._onerror[1]);
             }
 
             if (typeof value === 'function') {
                 const boundListener = value.bind(this);
 
-                (<ITimingObject>this).addEventListener('error', boundListener);
+                this.addEventListener('error', boundListener);
 
                 this._onerror = [value, boundListener];
             } else {

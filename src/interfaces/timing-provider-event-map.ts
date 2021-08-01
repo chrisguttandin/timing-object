@@ -1,4 +1,4 @@
-export interface ITimingProviderEventMap {
+export interface ITimingProviderEventMap extends Record<string, Event> {
     adjust: Event;
 
     change: Event;
