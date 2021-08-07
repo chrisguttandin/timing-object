@@ -1,4 +1,4 @@
-import { ITimingObject, ITimingProvider, ITimingStateVector } from '../interfaces';
+import { ITimingObject, ITimingObjectEventMap, ITimingProvider, ITimingStateVector } from '../interfaces';
 import { TConnectionState, TErrorEventHandler, TEventHandler, TTimingObjectConstructorFactory, TTimingStateVectorUpdate } from '../types';
 
 export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
@@ -11,7 +11,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
     setTimeout,
     translateTimingStateVector
 ) => {
-    return class extends eventTargetConstructor implements ITimingObject {
+    return class extends eventTargetConstructor<ITimingObjectEventMap> implements ITimingObject {
         private _endPosition: number;
 
         private _onchange: null | [TEventHandler<this>, TEventHandler<this>];

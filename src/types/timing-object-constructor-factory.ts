@@ -1,4 +1,4 @@
-import { ITimingObjectConstructor, ITimingObjectEventMap } from '../interfaces';
+import { ITimingObjectConstructor } from '../interfaces';
 import { TCalculateTimeoutDelayFunction } from './calculate-timeout-delay-function';
 import { TEventTargetConstructor } from './event-target-constructor';
 import { TFilterTimingStateVectorUpdateFunction } from './filter-timing-state-vector-update-function';
@@ -10,7 +10,7 @@ export type TTimingObjectConstructorFactory = (
     calculateTimeoutDelay: TCalculateTimeoutDelayFunction,
     createIllegalValueError: TIllegalValueErrorFactory,
     createInvalidStateError: TInvalidStateErrorFactory,
-    eventTargetConstructor: TEventTargetConstructor<ITimingObjectEventMap>,
+    eventTargetConstructor: TEventTargetConstructor,
     filterTimingStateVectorUpdate: TFilterTimingStateVectorUpdateFunction,
     performance: Window['performance'],
     setTimeout: Window['setTimeout'],
