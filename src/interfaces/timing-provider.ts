@@ -16,9 +16,6 @@ export interface ITimingProvider extends IEventTarget<ITimingProviderEventMap> {
     // @todo onchange is not part of the specification.
     onchange: null | TEventHandler<this>;
 
-    // @todo onerror is not part of the specification.
-    // @todo onerror: null | EventListener;
-
     // @todo onreadystatechange is not part of the specification.
     onreadystatechange: null | TEventHandler<this>;
 
