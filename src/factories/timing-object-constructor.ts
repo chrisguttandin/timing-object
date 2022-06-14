@@ -105,7 +105,7 @@ export const createTimingObjectConstructor: TTimingObjectConstructorFactory = (
                     }
 
                     if (timingProviderSource.error !== null) {
-                        setTimeout(() => this.dispatchEvent(new Event('error')));
+                        setTimeout(() => this.dispatchEvent(new ErrorEvent('error', { error: timingProviderSource.error })));
                     }
 
                     setTimeout(() => this.dispatchEvent(new Event('readystatechange')));

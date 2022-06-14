@@ -251,7 +251,7 @@ describe('TimingObject', () => {
             timingObject.onerror = onerror;
             timingObject.addEventListener('error', onerror);
 
-            timingObject.dispatchEvent(new Event('error'));
+            timingObject.dispatchEvent(new ErrorEvent('error'));
 
             expect(onerror).to.have.been.calledTwice;
         });
