@@ -6,6 +6,7 @@ import { createEventTargetFactory } from './factories/event-target-factory';
 import { createIllegalValueError } from './factories/illegal-value-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createTimingObjectConstructor } from './factories/timing-object-constructor';
+import { createWindow } from './factories/window';
 import { calculateRealSolutions } from './functions/calculate-real-solutions';
 import { filterTimingStateVectorUpdate } from './functions/filter-timing-state-vector-update';
 import { translateTimingStateVector } from './functions/translate-timing-state-vector';
@@ -25,7 +26,7 @@ const timingObjectConstructor: ITimingObjectConstructor = createTimingObjectCons
     createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
     createIllegalValueError,
     createInvalidStateError,
-    createEventTargetConstructor(createEventTargetFactory(window), wrapEventListener),
+    createEventTargetConstructor(createEventTargetFactory(createWindow()), wrapEventListener),
     filterTimingStateVectorUpdate,
     performance,
     setTimeout,
