@@ -10,7 +10,7 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ${{ (matrix.target == 'safari') && 'macos-latest' || 'ubuntu-latest' }}
 
         strategy:
             matrix:

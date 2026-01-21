@@ -82,8 +82,8 @@
         "prepare": "husky",
         "prepublishOnly": "npm run build",
         "test": "npm run lint && npm run build && npm run test:integration && npm run test:unit",
-        "test:integration": "if [ \"$TYPE\" = \"\" -o \"$TYPE\" = \"integration\" ]; then karma start config/karma/config-integration.js --single-run; fi",
-        "test:unit": "if [ \"$TYPE\" = \"\" -o \"$TYPE\" = \"unit\" ]; then karma start config/karma/config-unit.js --single-run; fi"
+        "test:integration": "if [ \"$TYPE\" = \"\" -o \"$TYPE\" = \"integration\" ]; then npx vitest --config config/vitest/integration.ts; fi",
+        "test:unit": "if [ \"$TYPE\" = \"\" -o \"$TYPE\" = \"unit\" ]; then npx vitest --config config/vitest/unit.ts; fi"
     },
     "types": "build/es2019/module.d.ts",
     "version": "3.1.96"

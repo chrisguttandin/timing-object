@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { spy, stub } from 'sinon';
 import { TimingProvider } from '../../mocks/timing-provider';
 import { calculateRealSolutions } from '../../../src/functions/calculate-real-solutions';
@@ -73,10 +74,16 @@ describe('TimingObject', () => {
             });
         });
 
-        it('should emit a readystatechange event', (done) => {
+        it('should emit a readystatechange event', () => {
             const timingObject = new TimingObject();
 
-            timingObject.onreadystatechange = () => done();
+            return new Promise((resolve) => {
+                timingObject.onreadystatechange = () => {
+                    timingObject.onreadystatechange = null;
+
+                    resolve();
+                };
+            });
         });
 
         it('should schedule a timeout event', () => {
@@ -177,33 +184,41 @@ describe('TimingObject', () => {
                 timingObject = new TimingObject(timingProvider);
             });
 
-            it('should pass on a change event', (done) => {
-                timingObject.onchange = function (event) {
-                    expect(event).to.be.an.instanceOf(Event);
-                    expect(event.currentTarget).to.equal(timingObject);
-                    expect(event.target).to.equal(timingObject);
-                    expect(event.type).to.equal('change');
-
-                    expect(this).to.equal(timingObject);
-
-                    done();
-                };
-
+            it('should pass on a change event', () => {
                 timingProvider.dispatchEvent(new Event('change'));
+
+                return new Promise((resolve) => {
+                    timingObject.onchange = function (event) {
+                        timingObject.onchange = null;
+
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(timingObject);
+                        expect(event.target).to.equal(timingObject);
+                        expect(event.type).to.equal('change');
+
+                        expect(this).to.equal(timingObject);
+
+                        resolve();
+                    };
+                });
             });
 
-            it('should schedule a new timeout event', (done) => {
-                timingObject.onchange = () => {
-                    // The fakeSetTimeout stub gets called thrice because other events use setTimeout as well.
-                    expect(fakeSetTimeout).to.have.been.calledThrice;
-                    // The second argument specifies the delay.
-                    expect(fakeSetTimeout.secondCall.args[1]).to.equal(1);
-
-                    done();
-                };
-
+            it('should schedule a new timeout event', () => {
                 timingProvider.vector = { acceleration: 0, position: 2, velocity: 1 };
                 timingProvider.dispatchEvent(new Event('change'));
+
+                return new Promise((resolve) => {
+                    timingObject.onchange = () => {
+                        timingObject.onchange = null;
+
+                        // The fakeSetTimeout stub gets called thrice because other events use setTimeout as well.
+                        expect(fakeSetTimeout).to.have.been.calledThrice;
+                        // The second argument specifies the delay.
+                        expect(fakeSetTimeout.secondCall.args[1]).to.equal(1);
+
+                        resolve();
+                    };
+                });
             });
         });
     });
@@ -306,17 +321,21 @@ describe('TimingObject', () => {
                 expect(onreadystatechange).to.have.been.calledTwice;
             });
 
-            it('should immediately fire an readystatechange event', (done) => {
-                timingObject.onreadystatechange = function (event) {
-                    expect(event).to.be.an.instanceOf(Event);
-                    expect(event.currentTarget).to.equal(timingObject);
-                    expect(event.target).to.equal(timingObject);
-                    expect(event.type).to.equal('readystatechange');
+            it('should immediately fire an readystatechange event', () => {
+                return new Promise((resolve) => {
+                    timingObject.onreadystatechange = function (event) {
+                        timingObject.onreadystatechange = null;
 
-                    expect(this).to.equal(timingObject);
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(timingObject);
+                        expect(event.target).to.equal(timingObject);
+                        expect(event.type).to.equal('readystatechange');
 
-                    done();
-                };
+                        expect(this).to.equal(timingObject);
+
+                        resolve();
+                    };
+                });
             });
         });
 
@@ -330,76 +349,96 @@ describe('TimingObject', () => {
             });
 
             describe('with a valid transition', () => {
-                it('should pass on an readystatechange event', (done) => {
-                    timingObject.onreadystatechange = function (event) {
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(timingObject);
-                        expect(event.target).to.equal(timingObject);
-                        expect(event.type).to.equal('readystatechange');
-
-                        expect(this).to.equal(timingObject);
-
-                        done();
-                    };
-
+                it('should pass on an readystatechange event', () => {
                     timingProvider.readyState = 'closing';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
+
+                    return new Promise((resolve) => {
+                        timingObject.onreadystatechange = function (event) {
+                            timingObject.onreadystatechange = null;
+
+                            expect(event).to.be.an.instanceOf(Event);
+                            expect(event.currentTarget).to.equal(timingObject);
+                            expect(event.target).to.equal(timingObject);
+                            expect(event.type).to.equal('readystatechange');
+
+                            expect(this).to.equal(timingObject);
+
+                            resolve();
+                        };
+                    });
                 });
 
-                it('should update the own readyState', (done) => {
-                    timingObject.onreadystatechange = () => {
-                        expect(timingObject.readyState).to.equal(timingProvider.readyState);
-
-                        done();
-                    };
-
+                it('should update the own readyState', () => {
                     timingProvider.readyState = 'closing';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
+
+                    return new Promise((resolve) => {
+                        timingObject.onreadystatechange = () => {
+                            timingObject.onreadystatechange = null;
+
+                            expect(timingObject.readyState).to.equal(timingProvider.readyState);
+
+                            resolve();
+                        };
+                    });
                 });
             });
 
             describe('with an invalid transition', () => {
-                it('should pass on an readystatechange event', (done) => {
-                    timingObject.onreadystatechange = function (event) {
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(timingObject);
-                        expect(event.target).to.equal(timingObject);
-                        expect(event.type).to.equal('readystatechange');
-
-                        expect(this).to.equal(timingObject);
-
-                        done();
-                    };
-
+                it('should pass on an readystatechange event', () => {
                     timingProvider.readyState = 'connecting';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
+
+                    return new Promise((resolve) => {
+                        timingObject.onreadystatechange = function (event) {
+                            timingObject.onreadystatechange = null;
+
+                            expect(event).to.be.an.instanceOf(Event);
+                            expect(event.currentTarget).to.equal(timingObject);
+                            expect(event.target).to.equal(timingObject);
+                            expect(event.type).to.equal('readystatechange');
+
+                            expect(this).to.equal(timingObject);
+
+                            resolve();
+                        };
+                    });
                 });
 
-                it('should set the own readyState to closed', (done) => {
-                    timingObject.onreadystatechange = () => {
-                        expect(timingObject.readyState).to.equal('closed');
-
-                        done();
-                    };
-
+                it('should set the own readyState to closed', () => {
                     timingProvider.readyState = 'connecting';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
+
+                    return new Promise((resolve) => {
+                        timingObject.onreadystatechange = () => {
+                            timingObject.onreadystatechange = null;
+
+                            expect(timingObject.readyState).to.equal('closed');
+
+                            resolve();
+                        };
+                    });
                 });
 
-                it('should emit an error event', (done) => {
-                    timingObject.onerror = function (event) {
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(timingObject);
-                        expect(event.target).to.equal(timingObject);
-                        expect(event.type).to.equal('error');
-
-                        expect(this).to.equal(timingObject);
-
-                        done();
-                    };
-
+                it('should emit an error event', () => {
                     timingProvider.readyState = 'connecting';
                     timingProvider.dispatchEvent(new Event('readystatechange'));
+
+                    return new Promise((resolve) => {
+                        timingObject.onerror = function (event) {
+                            timingObject.onerror = null;
+
+                            expect(event).to.be.an.instanceOf(Event);
+                            expect(event.currentTarget).to.equal(timingObject);
+                            expect(event.target).to.equal(timingObject);
+                            expect(event.type).to.equal('error');
+
+                            expect(this).to.equal(timingObject);
+
+                            resolve();
+                        };
+                    });
                 });
             });
         });
@@ -471,13 +510,17 @@ describe('TimingObject', () => {
         });
     });
 
-    describe('addEventListener()', () => {});
+    describe('addEventListener()', ({ skip }) => {
+        skip();
+    });
 
-    describe('dispatchEvent()', () => {});
+    describe('dispatchEvent()', ({ skip }) => {
+        skip();
+    });
 
     describe('query()', () => {
         describe('with a readyState other than open', () => {
-            it('should throw an InvalidStateError', (done) => {
+            it('should throw an InvalidStateError', () => {
                 const error = new Error('a fake error');
                 const timingObject = new TimingObject();
 
@@ -485,15 +528,9 @@ describe('TimingObject', () => {
                 timingObject._readyState = 'anything but open';
                 createInvalidStateError.returns(error);
 
-                try {
-                    timingObject.query();
-                } catch (err) {
-                    expect(err).to.equal(error);
+                expect(() => timingObject.query()).to.throw(error);
 
-                    expect(createInvalidStateError).to.have.been.calledOnce;
-
-                    done();
-                }
+                expect(createInvalidStateError).to.have.been.calledOnce;
             });
         });
 
@@ -596,10 +633,16 @@ describe('TimingObject', () => {
                 });
             });
 
-            it('should emit a change event', (done) => {
+            it('should emit a change event', () => {
                 timingObject.query();
 
-                timingObject.onchange = () => done();
+                return new Promise((resolve) => {
+                    timingObject.onchange = () => {
+                        timingObject.onchange = null;
+
+                        resolve();
+                    };
+                });
             });
         });
 
@@ -630,20 +673,28 @@ describe('TimingObject', () => {
                 });
             });
 
-            it('should emit a change event', (done) => {
+            it('should emit a change event', () => {
                 timingObject.query();
 
-                timingObject.onchange = () => done();
+                return new Promise((resolve) => {
+                    timingObject.onchange = () => {
+                        timingObject.onchange = null;
+
+                        resolve();
+                    };
+                });
             });
         });
     });
 
-    describe('removeEventListener()', () => {});
+    describe('removeEventListener()', ({ skip }) => {
+        skip();
+    });
 
     describe('update()', () => {
         describe('without a timingProviderSource', () => {
             describe('with a readyState other than open', () => {
-                it('should reject the promise with an InvalidStateError', (done) => {
+                it('should reject the promise with an InvalidStateError', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject();
 
@@ -651,38 +702,55 @@ describe('TimingObject', () => {
                     timingObject._readyState = 'anything but open';
                     createInvalidStateError.returns(error);
 
-                    timingObject.update({ velocity: 0 }).catch((err) => {
-                        expect(err).to.equal(error);
+                    timingObject.update({ velocity: 0 }).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err).to.equal(error);
 
-                        expect(createInvalidStateError).to.have.been.calledOnce;
-
-                        done();
-                    });
+                            expect(createInvalidStateError).to.have.been.calledOnce;
+                        }
+                    );
                 });
             });
 
             describe('with a vector containing no property values other than null or undefined', () => {
-                it('should not emit a change event', (done) => {
+                it('should not emit a change event', () => {
                     const timingObject = new TimingObject();
 
                     timingObject.update({ acceleration: null, velocity: undefined });
 
-                    timingObject.onchange = () => done(new Error('This should never be called.'));
+                    return new Promise((resolve, reject) => {
+                        timingObject.onchange = () => {
+                            timingObject.onchange = null;
 
-                    // Wait 500 milliseconds to be sure the event listener doesn't get called.
-                    setTimeout(() => {
-                        done();
-                    }, 500);
+                            reject(new Error('This should never be called.'));
+                        };
+
+                        // Wait 500 milliseconds to be sure the event listener doesn't get called.
+                        setTimeout(() => {
+                            timingObject.onchange = null;
+
+                            resolve();
+                        }, 500);
+                    });
                 });
             });
 
             describe('with a vector containing numeric property values', () => {
-                it('should emit a change event', (done) => {
+                it('should emit a change event', () => {
                     const timingObject = new TimingObject();
 
                     timingObject.update({ acceleration: 2 });
 
-                    timingObject.onchange = () => done();
+                    return new Promise((resolve) => {
+                        timingObject.onchange = () => {
+                            timingObject.onchange = null;
+
+                            resolve();
+                        };
+                    });
                 });
 
                 it('should schedule a timeout event', () => {
@@ -840,36 +908,42 @@ describe('TimingObject', () => {
             });
 
             describe('with a given endPosition', () => {
-                it('should reject a vector positioned above the endPosition', (done) => {
+                it('should reject a vector positioned above the endPosition', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 0, velocity: 1 }, 0, 1);
 
                     createIllegalValueError.returns(error);
 
-                    timingObject.update({ position: 2 }).catch((err) => {
-                        expect(err).to.equal(error);
+                    timingObject.update({ position: 2 }).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err).to.equal(error);
 
-                        expect(createIllegalValueError).to.have.been.calledOnce;
-
-                        done();
-                    });
+                            expect(createIllegalValueError).to.have.been.calledOnce;
+                        }
+                    );
                 });
             });
 
             describe('with a given startPosition', () => {
-                it('should reject a vector positioned below the startPosition', (done) => {
+                it('should reject a vector positioned below the startPosition', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 3, velocity: 1 }, 3, 4);
 
                     createIllegalValueError.returns(error);
 
-                    timingObject.update({ position: 2 }).catch((err) => {
-                        expect(err).to.equal(error);
+                    timingObject.update({ position: 2 }).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err).to.equal(error);
 
-                        expect(createIllegalValueError).to.have.been.calledOnce;
-
-                        done();
-                    });
+                            expect(createIllegalValueError).to.have.been.calledOnce;
+                        }
+                    );
                 });
             });
         });
@@ -882,20 +956,23 @@ describe('TimingObject', () => {
             });
 
             describe('with a readyState other than open', () => {
-                it('should reject the promise with an InvalidStateError', (done) => {
+                it('should reject the promise with an InvalidStateError', () => {
                     const error = new Error('a fake error');
                     const timingProvider = new TimingProvider({ readyState: 'anything but open' });
                     const timingObject = new TimingObject(timingProvider);
 
                     createInvalidStateError.returns(error);
 
-                    timingObject.update(vector).catch((err) => {
-                        expect(err).to.equal(error);
+                    timingObject.update(vector).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err).to.equal(error);
 
-                        expect(createInvalidStateError).to.have.been.calledOnce;
-
-                        done();
-                    });
+                            expect(createInvalidStateError).to.have.been.calledOnce;
+                        }
+                    );
                 });
             });
 
@@ -925,14 +1002,17 @@ describe('TimingObject', () => {
                     expect(timingObject.update(vector)).to.equal(promise);
                 });
 
-                it('should return a promise rejecting a TypeError', (done) => {
+                it('should return a promise rejecting a TypeError', () => {
                     timingProvider.update.returns('anything but a promise');
 
-                    timingObject.update(vector).catch((err) => {
-                        expect(err).to.be.an.instanceOf(TypeError);
-
-                        done();
-                    });
+                    return timingObject.update(vector).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err).to.be.an.instanceOf(TypeError);
+                        }
+                    );
                 });
             });
         });

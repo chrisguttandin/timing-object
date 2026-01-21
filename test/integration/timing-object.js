@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { calculateRealSolutions } from '../../src/functions/calculate-real-solutions';
 import { createCalculateDelta } from '../../src/factories/calculate-delta';
 import { createCalculatePositiveRealSolution } from '../../src/factories/calculate-positive-real-solution';
