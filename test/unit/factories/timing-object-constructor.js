@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { spy, stub } from 'sinon';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TimingProvider } from '../../mocks/timing-provider';
 import { calculateRealSolutions } from '../../../src/functions/calculate-real-solutions';
 import { createCalculateDelta } from '../../../src/factories/calculate-delta';
@@ -20,13 +19,13 @@ describe('TimingObject', () => {
     let fakeSetTimeout;
 
     beforeEach(() => {
-        createIllegalValueError = stub();
-        createInvalidStateError = stub();
-        fakePerformance = { now: stub() };
-        fakeSetTimeout = stub();
+        createIllegalValueError = vi.fn();
+        createInvalidStateError = vi.fn();
+        fakePerformance = { now: vi.fn() };
+        fakeSetTimeout = vi.fn();
 
-        fakePerformance.now.returns(16000);
-        fakeSetTimeout.callsFake((callback, delay) => setTimeout(callback, delay));
+        fakePerformance.now.mockReturnValue(16000);
+        fakeSetTimeout.mockImplementation((callback, delay) => setTimeout(callback, delay));
 
         TimingObject = createTimingObjectConstructor(
             createCalculateTimeoutDelay(createCalculateDelta(createCalculatePositiveRealSolution(calculateRealSolutions))),
@@ -89,10 +88,10 @@ describe('TimingObject', () => {
         it('should schedule a timeout event', () => {
             new TimingObject({ position: 2, velocity: 1 }, 1, 3);
 
-            // The fakeSetTimeout stub gets called twice because the event emitter uses setTimeout as well.
+            // The fakeSetTimeout function gets called twice because the event emitter uses setTimeout as well.
             expect(fakeSetTimeout).to.have.been.calledTwice;
             // The second argument specifies the delay.
-            expect(fakeSetTimeout.firstCall.args[1]).to.equal(1);
+            expect(fakeSetTimeout.mock.calls[0][1]).to.equal(1);
         });
     });
 
@@ -162,7 +161,7 @@ describe('TimingObject', () => {
             });
 
             it('should register an independent event listener', () => {
-                const onchange = spy();
+                const onchange = vi.fn();
 
                 timingObject.onchange = onchange;
                 timingObject.addEventListener('change', onchange);
@@ -211,10 +210,10 @@ describe('TimingObject', () => {
                     timingObject.onchange = () => {
                         timingObject.onchange = null;
 
-                        // The fakeSetTimeout stub gets called thrice because other events use setTimeout as well.
+                        // The fakeSetTimeout function gets called thrice because other events use setTimeout as well.
                         expect(fakeSetTimeout).to.have.been.calledThrice;
                         // The second argument specifies the delay.
-                        expect(fakeSetTimeout.secondCall.args[1]).to.equal(1);
+                        expect(fakeSetTimeout.mock.calls[1][1]).to.equal(1);
 
                         resolve();
                     };
@@ -261,7 +260,7 @@ describe('TimingObject', () => {
         });
 
         it('should register an independent event listener', () => {
-            const onerror = spy();
+            const onerror = vi.fn();
 
             timingObject.onerror = onerror;
             timingObject.addEventListener('error', onerror);
@@ -311,7 +310,7 @@ describe('TimingObject', () => {
             });
 
             it('should register an independent event listener', () => {
-                const onreadystatechange = spy();
+                const onreadystatechange = vi.fn();
 
                 timingObject.onreadystatechange = onreadystatechange;
                 timingObject.addEventListener('readystatechange', onreadystatechange);
@@ -526,7 +525,7 @@ describe('TimingObject', () => {
 
                 // @todo This is an ugly fix to modify the readyonly property.
                 timingObject._readyState = 'anything but open';
-                createInvalidStateError.returns(error);
+                createInvalidStateError.mockReturnValue(error);
 
                 expect(() => timingObject.query()).to.throw(error);
 
@@ -538,7 +537,7 @@ describe('TimingObject', () => {
             it('should not move', () => {
                 const timingObject = new TimingObject({ position: 2 });
 
-                fakePerformance.now.returns(17000);
+                fakePerformance.now.mockReturnValue(17000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -547,7 +546,7 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
 
-                fakePerformance.now.returns(31000);
+                fakePerformance.now.mockReturnValue(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -562,7 +561,7 @@ describe('TimingObject', () => {
             it('should move constantly', () => {
                 const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                fakePerformance.now.returns(17000);
+                fakePerformance.now.mockReturnValue(17000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -571,7 +570,7 @@ describe('TimingObject', () => {
                     velocity: 1
                 });
 
-                fakePerformance.now.returns(31000);
+                fakePerformance.now.mockReturnValue(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -586,7 +585,7 @@ describe('TimingObject', () => {
             it('should move with an accelerated velocity', () => {
                 const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                fakePerformance.now.returns(17000);
+                fakePerformance.now.mockReturnValue(17000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 1.2,
@@ -595,7 +594,7 @@ describe('TimingObject', () => {
                     velocity: 2.2
                 });
 
-                fakePerformance.now.returns(31000);
+                fakePerformance.now.mockReturnValue(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 1.2,
@@ -612,7 +611,7 @@ describe('TimingObject', () => {
             beforeEach(() => {
                 timingObject = new TimingObject({ position: 2, velocity: 1.5 }, 1, 3);
 
-                fakePerformance.now.returns(17000);
+                fakePerformance.now.mockReturnValue(17000);
             });
 
             it('should stop at the endPosition', () => {
@@ -623,7 +622,7 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
 
-                fakePerformance.now.returns(31000);
+                fakePerformance.now.mockReturnValue(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -652,7 +651,7 @@ describe('TimingObject', () => {
             beforeEach(() => {
                 timingObject = new TimingObject({ position: 2, velocity: -1.5 }, 1);
 
-                fakePerformance.now.returns(17000);
+                fakePerformance.now.mockReturnValue(17000);
             });
 
             it('should stop at the startPosition', () => {
@@ -663,7 +662,7 @@ describe('TimingObject', () => {
                     velocity: 0
                 });
 
-                fakePerformance.now.returns(31000);
+                fakePerformance.now.mockReturnValue(31000);
 
                 expect(timingObject.query()).to.deep.equal({
                     acceleration: 0,
@@ -700,7 +699,7 @@ describe('TimingObject', () => {
 
                     // @todo This is an ugly fix to modify the readyonly property.
                     timingObject._readyState = 'anything but open';
-                    createInvalidStateError.returns(error);
+                    createInvalidStateError.mockReturnValue(error);
 
                     timingObject.update({ velocity: 0 }).then(
                         () => {
@@ -756,13 +755,13 @@ describe('TimingObject', () => {
                 it('should schedule a timeout event', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 }, 1, 3);
 
-                    fakeSetTimeout.reset();
+                    fakeSetTimeout.mockClear();
                     timingObject.update({ velocity: 2 });
 
-                    // The fakeSetTimeout stub gets called twice because the event emitter uses setTimeout as well.
+                    // The fakeSetTimeout function gets called twice because the event emitter uses setTimeout as well.
                     expect(fakeSetTimeout).to.have.been.calledTwice;
                     // The second argument specifies the delay.
-                    expect(fakeSetTimeout.firstCall.args[1]).to.equal(0.5);
+                    expect(fakeSetTimeout.mock.calls[0][1]).to.equal(0.5);
                 });
             });
 
@@ -770,7 +769,7 @@ describe('TimingObject', () => {
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ acceleration: 2 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -785,7 +784,7 @@ describe('TimingObject', () => {
                 it('should update the position of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ position: 3 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -800,7 +799,7 @@ describe('TimingObject', () => {
                 it('should update the velocity of the vector', () => {
                     const timingObject = new TimingObject({ position: 2 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ velocity: 1 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -817,7 +816,7 @@ describe('TimingObject', () => {
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ acceleration: 2 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -832,7 +831,7 @@ describe('TimingObject', () => {
                 it('should update the position of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ position: 5 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -847,7 +846,7 @@ describe('TimingObject', () => {
                 it('should update the velocity of the vector', () => {
                     const timingObject = new TimingObject({ position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ velocity: 0.5 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -864,7 +863,7 @@ describe('TimingObject', () => {
                 it('should update the acceleration of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ acceleration: 2 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -879,7 +878,7 @@ describe('TimingObject', () => {
                 it('should update the position of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ position: 5 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -894,7 +893,7 @@ describe('TimingObject', () => {
                 it('should update the velocity of the vector', () => {
                     const timingObject = new TimingObject({ acceleration: 1.2, position: 2, velocity: 1 });
 
-                    fakePerformance.now.returns(17000);
+                    fakePerformance.now.mockReturnValue(17000);
 
                     return timingObject.update({ velocity: 0.5 }).then(() => {
                         expect(timingObject.query()).to.deep.equal({
@@ -912,7 +911,7 @@ describe('TimingObject', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 0, velocity: 1 }, 0, 1);
 
-                    createIllegalValueError.returns(error);
+                    createIllegalValueError.mockReturnValue(error);
 
                     timingObject.update({ position: 2 }).then(
                         () => {
@@ -932,7 +931,7 @@ describe('TimingObject', () => {
                     const error = new Error('a fake error');
                     const timingObject = new TimingObject({ acceleration: 1.5, position: 3, velocity: 1 }, 3, 4);
 
-                    createIllegalValueError.returns(error);
+                    createIllegalValueError.mockReturnValue(error);
 
                     timingObject.update({ position: 2 }).then(
                         () => {
@@ -961,7 +960,7 @@ describe('TimingObject', () => {
                     const timingProvider = new TimingProvider({ readyState: 'anything but open' });
                     const timingObject = new TimingObject(timingProvider);
 
-                    createInvalidStateError.returns(error);
+                    createInvalidStateError.mockReturnValue(error);
 
                     timingObject.update(vector).then(
                         () => {
@@ -986,24 +985,24 @@ describe('TimingObject', () => {
                 });
 
                 it("should call the timingProviderSource's update() method", () => {
-                    timingProvider.update.resolves();
+                    timingProvider.update.mockResolvedValue();
 
                     return timingObject.update(vector).then(() => {
                         expect(timingProvider.update).to.have.been.calledOnce;
-                        expect(timingProvider.update).to.have.been.calledWithExactly(vector);
+                        expect(timingProvider.update).to.have.been.calledWith(vector);
                     });
                 });
 
                 it("should pass on a promise returned by the timingProviderSource's update() method", () => {
                     const promise = Promise.resolve();
 
-                    timingProvider.update.returns(promise);
+                    timingProvider.update.mockReturnValue(promise);
 
                     expect(timingObject.update(vector)).to.equal(promise);
                 });
 
                 it('should return a promise rejecting a TypeError', () => {
-                    timingProvider.update.returns('anything but a promise');
+                    timingProvider.update.mockReturnValue('anything but a promise');
 
                     return timingObject.update(vector).then(
                         () => {

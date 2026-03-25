@@ -1,6 +1,6 @@
 import { createEventTargetConstructor } from '../../src/factories/event-target-constructor';
 import { createEventTargetFactory } from '../../src/factories/event-target-factory';
-import { stub } from 'sinon';
+import { vi } from 'vitest';
 import { wrapEventListener } from '../../src/functions/wrap-event-listener';
 
 const DEFAULT_VECTOR = { acceleration: 0, position: 0, velocity: 0 };
@@ -21,7 +21,7 @@ export class TimingProvider extends createEventTargetConstructor(createEventTarg
         this.readyState = readyState;
         this.skew = skew;
         this.startPosition = startPosition;
-        this.update = stub();
+        this.update = vi.fn();
         this.vector = { ...DEFAULT_VECTOR, ...vector };
     }
 }
