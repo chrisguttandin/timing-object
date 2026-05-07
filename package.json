@@ -19,7 +19,7 @@
         "@babel/plugin-transform-runtime": "^7.29.0",
         "@babel/preset-env": "^7.29.2",
         "@commitlint/cli": "^20.5.3",
-        "@commitlint/config-angular": "^20.5.0",
+        "@commitlint/config-angular": "^20.5.3",
         "@rollup/plugin-babel": "^7.0.0",
         "@vitest/browser-webdriverio": "^4.1.4",
         "commitizen": "^4.3.1",
